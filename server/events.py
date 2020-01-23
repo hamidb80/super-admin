@@ -1,5 +1,5 @@
 from server import tunnel
-from actions import connect, get_hello, disconnect
+from actions import connect, newname, disconnect, execute
 from typing import Callable, List
 
 
@@ -15,4 +15,6 @@ class Event:
 event_list: List[Event] = [
     Event('connect', connect),
     Event('disconnect', disconnect),
+    Event('newname', newname),
+    Event('execute', execute)
 ]
