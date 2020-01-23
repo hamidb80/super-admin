@@ -1,6 +1,6 @@
-class State:
+class StateManager:
     def __init__(self):
         self.is_connected = False
 
 
-app_state = State()
+app_state = StateManager()

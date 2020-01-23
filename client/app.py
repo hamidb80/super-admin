@@ -1,23 +1,19 @@
 from time import sleep
 from threading import Thread
-
-from connection import tunnel
+from config import tunnel
 from events import event_list
 from connection_checker import connection_checker
 
-
-# run in background
-thread = Thread(target=connection_checker)
-thread.start()
-
-# register events
+# Register events
 for event in event_list:
     tunnel.on(event.name, event.function)
 
-# you can't add any event to tunnel after run this
+
+Thread(target=connection_checker).start()
+
+# try to connect to the server at the first time
 while True:
     try:
         tunnel.run()
-        break
     except:
         sleep(1)

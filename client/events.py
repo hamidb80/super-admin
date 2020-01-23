@@ -1,4 +1,4 @@
-from connection import tunnel
+from config import tunnel
 from actions import connect, disconnect
 from typing import Callable, List
 
