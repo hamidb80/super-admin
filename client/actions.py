@@ -19,13 +19,14 @@ def command_input():
 
 
 command_input_thread = Thread(target=command_input)
+command_input_thread.start()
 
 # Functions dependent on events
 
 
 def connect():
     # Change Connection status to True
-    app_state.is_connected= True
+    app_state.is_connected = True
 
     # Connection Notification
     print('Connected to Server')
@@ -33,16 +34,12 @@ def connect():
     # Assign hostname as client name
     setname()
 
-    # Start command_input
-    command_input_thread.start()
-
 
 def disconnect():
     # Change Connection status to False
     app_state.is_connected = False
+    print('disconnected')
 
-    # Stop command_input
-    command_input_thread._stop()
 
 
 # Independent functions
