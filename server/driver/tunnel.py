@@ -21,5 +21,5 @@ class Tunnel:
     def send(self, event: str, data=None, socket_id=None):
         self.socket.emit(event, data=data, room=socket_id)
 
-    def listen(self):
+    def run(self):
         eventlet.wsgi.server(eventlet.listen(self.connection), self.app, log=default_logger)
