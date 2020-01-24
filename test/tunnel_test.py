@@ -12,14 +12,15 @@ from client.driver.tunnel import Tunnel as TunnelClient
 class TestE2E:
     @classmethod
     def setup_class(self):
-        server = TunnelServer(ADDR, PORT)
-        client = TunnelClient(ADDR, PORT)
+        self.server = TunnelServer(ADDR, PORT)
+        self.client = TunnelClient(ADDR, PORT)
 
-        self.server_thread = Thread(target=lambda: server.run())
-        self.client_thread = Thread(target=lambda: client.run())
+        self.server_thread = Thread(target=lambda: self.server.run())
+        self.client_thread = Thread(target=lambda: self.client.run())
 
         self.server_thread.start()
         self.client_thread.start()
+
 
     def test_run_without_error(self):
         sleep(1)
@@ -27,6 +28,8 @@ class TestE2E:
 
     @classmethod
     def teardown_class(self):
+        self.client.stop()
+        self.server.stop()
         # TODO: terminate threads after
         pass
 

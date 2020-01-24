@@ -17,3 +17,6 @@ class Tunnel:
     def run(self):
         self.socket.connect(f'http://{self.address[0]}:{self.address[1]}')
         self.socket.wait()
+
+    def stop(self):
+        self.socket.disconnect()

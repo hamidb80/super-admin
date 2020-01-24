@@ -7,6 +7,7 @@ import logging
 default_logger = logging.getLogger('tunnel.logger')
 default_logger.setLevel(logging.DEBUG)
 
+
 class Tunnel:
     def __init__(self, addr, port):
         self.connection = (addr, port)
@@ -22,4 +23,8 @@ class Tunnel:
         self.socket.emit(event, data=data, room=socket_id)
 
     def run(self):
-        eventlet.wsgi.server(eventlet.listen(self.connection), self.app, log=default_logger)
+        eventlet.wsgi.server(eventlet.listen(
+            self.connection), self.app, log=default_logger)
+
+    def stop(self):
+        eventlet.StopServe()
