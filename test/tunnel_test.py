@@ -9,18 +9,31 @@ from server.config import ADDR, PORT
 from client.driver.tunnel import Tunnel as TunnelClient
 
 
-class TestServer:
-    def test_run_without_error(self):
+class TestE2E:
+    @classmethod
+    def setup_class(self):
         server = TunnelServer(ADDR, PORT)
         client = TunnelClient(ADDR, PORT)
 
-        server_thread = Thread(target=lambda: server.run())
-        client_thread = Thread(target=lambda: client.run())
+        self.server_thread = Thread(target=lambda: server.run())
+        self.client_thread = Thread(target=lambda: client.run())
 
-        server_thread.start()
-        client_thread.start()
+        self.server_thread.start()
+        self.client_thread.start()
 
-
+    def test_run_without_error(self):
         sleep(1)
+        assert self.server_thread.is_alive() and self.client_thread.is_alive()
 
-        assert server_thread.is_alive() and client_thread.is_alive()
+    @classmethod
+    def teardown_class(self):
+        # TODO: terminate threads after
+        pass
+
+
+class TestServer:
+    pass
+
+
+class TestClient:
+    pass
