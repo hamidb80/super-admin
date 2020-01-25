@@ -32,11 +32,3 @@ class TestE2E:
         self.server.stop()
         # TODO: terminate threads after
         pass
-
-
-class TestServer:
-    pass
-
-
-class TestClient:
-    pass
