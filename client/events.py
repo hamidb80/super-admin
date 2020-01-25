@@ -1,5 +1,5 @@
-from config import tunnel
-from actions import connect, disconnect
+from connection import tunnel
+from actions import connect, disconnect, auth
 from typing import Callable, List
 
 
@@ -15,4 +15,5 @@ class Event:
 event_list: List[Event] = [
     Event('connect', connect),
     Event('disconnect', disconnect),
+    Event('auth', auth)
 ]

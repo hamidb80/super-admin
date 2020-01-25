@@ -1,21 +1,22 @@
-from config import tunnel
+from connection import tunnel
 from threading import Thread
 from states import app_state
+from config import Password
 import socket
 
+
+# variables
+
+
 # Defining command input
-
-
 def command_input():
     while True:
-        inp = input('> ')
+        inp = input('Client >\n')
+        print(f"I got it -{inp}")
         try:
-            print(f"I got it -{inp}")
-            print(f"I'll send it to the server")
-
-            tunnel.send('execute', inp)
+            exec(inp)
         except:
-            print('Err')
+            print("Err")
 
 
 command_input_thread = Thread(target=command_input)
@@ -31,8 +32,8 @@ def connect():
     # Connection Notification
     print('Connected to Server')
 
-    # Assign hostname as client name
-    setname()
+    # send newuser event to server
+    newuser()
 
 
 def disconnect():
@@ -41,9 +42,38 @@ def disconnect():
     print('disconnected')
 
 
+def auth(data):
+    enteredpass = input("Please enter server's password\n")
+    testhash = Password(enteredpass)
+
+    if (testhash.key == data):
+        tunnel.send('has_access', data=None)
+        execinserv()
+
+    else:
+        print("Wrong Password")
+        tunnel.send('denied_access', data=None)
+
 
 # Independent functions
 
-def setname():
+def execinserv():
+    inp = input('Server > \n')
+
+    try:
+        print(f"I got it: {inp}")
+        print(f"I'll send it to the server")
+
+        tunnel.send('execute', inp)
+
+    except:
+        print('Err')
+
+
+def newuser():
     hostname = socket.gethostname()
-    tunnel.send('newname', hostname)
+    tunnel.send('newuser', hostname)
+
+
+def ask_auth():
+    tunnel.send('askforauth', data=None)
