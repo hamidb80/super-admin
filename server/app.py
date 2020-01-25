@@ -5,4 +5,5 @@ from events import event_list
 for event in event_list:
     tunnel.on(event.name, event.function)
 
-tunnel.tun()
+if __name__ == "__main__":
+    tunnel.tun()
