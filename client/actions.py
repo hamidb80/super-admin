@@ -1,35 +1,20 @@
 from connection import tunnel
-from threading import Thread
 from states import app_state
-from config import Password
+from utils import Password
 import socket
 
 
 # variables
 
 
-# Defining command input
-def command_input():
-    while True:
-        inp = input('Client >\n')
-        print(f"I got it -{inp}")
-        try:
-            exec(inp)
-        except:
-            print("Err")
-
-
-command_input_thread = Thread(target=command_input)
-command_input_thread.start()
-
-# Functions dependent on events
-
+# functions dependant on events
 
 def connect():
-    # Change Connection status to True
+    # change Connection status to True
     app_state.is_connected = True
+    app_state.is_waiting = True
 
-    # Connection Notification
+    # connection Notification
     print('Connected to Server')
 
     # send newuser event to server
@@ -37,8 +22,9 @@ def connect():
 
 
 def disconnect():
-    # Change Connection status to False
+    # change Connection status to False
     app_state.is_connected = False
+    app_state.is_waiting = False
     print('disconnected')
 
 
@@ -52,10 +38,11 @@ def auth(data):
 
     else:
         print("Wrong Password")
+        app_state.is_waiting = True
         tunnel.send('denied_access', data=None)
 
 
-# Independent functions
+# functions independant from events
 
 def execinserv():
     inp = input('Server > \n')
@@ -65,6 +52,7 @@ def execinserv():
         print(f"I'll send it to the server")
 
         tunnel.send('execute', inp)
+        app_state.is_waiting = True
 
     except:
         print('Err')
@@ -76,4 +64,14 @@ def newuser():
 
 
 def ask_auth():
+    app_state.is_waiting = False
     tunnel.send('askforauth', data=None)
+
+def command_input():
+    while True:
+        while app_state.is_waiting==True:
+            inp = input('Client >\n')
+            try:
+                exec(inp)
+            except:
+                print("Err")
