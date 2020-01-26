@@ -1,7 +1,8 @@
 from server import tunnel
-from config import Password
+from utils import Password
 
 # variables
+
 clients = {}
 clients_inv = {}
 
@@ -17,14 +18,14 @@ def connect(socket_id, data=None):
     print(f'user {socket_id} connected')
 
 
-def disconnect(socket_id):
+def disconnect(socket_id, data=None):
     print(f'user {clients[socket_id]} disconnected')
 
 
-def newuser(socket_id, data):
+def newuser(socket_id, hostname):
 
     # add hostname to clients dictionary
-    clients[socket_id] = data
+    clients[socket_id] = hostname
     clients_inv = {v: k for k, v in clients.items()}
 
     # print hostname
@@ -47,7 +48,7 @@ def denied_access(socket_id):
 
 
 def execute(socket_id, code):
-    print(f'User {clients[socket_id]} executed command {code}')
+    print(f'User {clients[socket_id]} executed command: {code}')
 
     try:
         exec(code)
