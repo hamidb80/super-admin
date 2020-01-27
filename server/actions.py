@@ -32,9 +32,11 @@ def notification(socket_id,data):
     if data_chunks[0]=="newuser":
         # change clients and clients_inv globally
         global clients, clients_inv
+        
         # make dictionaries of clients connected to server
         clients[socket_id] = data_chunks[1]
         clients_inv = {v: k for k, v in clients.items()}
+        
         # anounce new name 
         print(f'User {socket_id} is now called {clients[socket_id]}')
         
