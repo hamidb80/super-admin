@@ -12,6 +12,7 @@ for event in event_list:
 # start connection checker
 Thread(target=connection_checker).start()
 
+# start command input
 Thread(target=command_input).start()
 
 

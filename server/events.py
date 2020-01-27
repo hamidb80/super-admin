@@ -1,5 +1,5 @@
 from server import tunnel
-from actions import connect, newuser, disconnect, execute, givepass, has_access, denied_access
+from actions import connect, disconnect, executefromclient, notification
 from typing import Callable, List
 
 
@@ -15,9 +15,6 @@ class Event:
 event_list: List[Event] = [
     Event('connect', connect),
     Event('disconnect', disconnect),
-    Event('newuser', newuser),
-    Event('execute', execute),
-    Event('askforauth', givepass),
-    Event('has_access', has_access),
-    Event('denied_access', denied_access)
+    Event('execute', executefromclient),
+    Event('notification', notification)
 ]
