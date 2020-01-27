@@ -1,6 +1,5 @@
 import hashlib
 import os
-import codecs
 
 class Password:
     def __init__(self,passwd):
