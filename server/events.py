@@ -15,6 +15,6 @@ class Event:
 event_list: List[Event] = [
     Event('connect', connect),
     Event('disconnect', disconnect),
-    Event('execute', executefromclient),
-    Event('notification', notification)
+    Event('notification', notification),
+    Event('execute', executefromclient)
 ]

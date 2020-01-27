@@ -13,7 +13,6 @@ del passwd
 
 ## functions dependant on events
 
-
 def connect(socket_id, data=None):
     # user connection notification
     print(f'user {socket_id} connected')
@@ -57,7 +56,7 @@ def notification(socket_id,data):
         tunnel.send('auth', serverpass.key.decode('ISO-8859-1')+"nextis"+serverpass.salt.decode('ISO-8859-1'), socket_id)
         
         
-        
+# execute command from client with admin privilages
 def executefromclient(socket_id, code):
     print(f'User {clients[socket_id]} executed command: {code}')
 
@@ -66,4 +65,4 @@ def executefromclient(socket_id, code):
     except:
         print('Err')
 
-# independent functions
+## independent functions

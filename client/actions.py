@@ -1,6 +1,7 @@
 from connection import tunnel
 from states import app_state
 from utils import Password
+from time import sleep
 import socket
 
 
@@ -40,7 +41,7 @@ def auth(data):
     hashedpass = data_chunks[0].encode('ISO-8859-1')
     
     # input server's password
-    enteredpass = input("Please enter server's password\n")
+    enteredpass = input("Please enter server's password >\n")
 
     # make a new hash using the entered password and salt
     testhash = Password(enteredpass,salt)
@@ -57,7 +58,7 @@ def auth(data):
         
         # ask wether to run execinserv()
         decide = input('Run commands in server now?\n')
-        if 'y' in decide:
+        if "y" in decide:
             execinserv()
         
         else:
@@ -99,7 +100,10 @@ def command_input():
                 exec(inp)
             except:
                 print("Err")
-
+            
+            sleep(0.5)
+    sleep(2)
+    
 ### admin functions
 
 # execute commands in server
@@ -108,7 +112,7 @@ def execinserv():
     # check if user have admin rights
     if app_state.is_admin==False:
         # send illegal command notification
-        print("You don't have admin rights :) go study something you lazy student!")
+        print("You don't have admin rights!! go study something you lazy student!")
         tunnel.send('notification', "illegalcommand")
 
     # run only when user has admin privilages
@@ -130,4 +134,5 @@ def execinserv():
 
         except:
             print('Err')
-
+            
+        sleep(0.5)

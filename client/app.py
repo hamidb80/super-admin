@@ -5,21 +5,22 @@ from events import event_list
 from connection_checker import connection_checker
 from actions import command_input
 
-# register events
-for event in event_list:
-    tunnel.on(event.name, event.function)
+if __name__ == "__main__":
+    # register events
+    for event in event_list:
+        tunnel.on(event.name, event.function)
 
-# start connection checker
-Thread(target=connection_checker).start()
+    # start connection checker
+    Thread(target=connection_checker).start()
 
-# start command input
-Thread(target=command_input).start()
+    # start command input
+    Thread(target=command_input).start()
 
 
 
-# try to connect to the server at the first time
-while True:
-    try:
-        tunnel.run()
-    except:
-        sleep(1)
+    # try to connect to the server at the first time
+    while True:
+        try:
+            tunnel.run()
+        except:
+            sleep(1)
