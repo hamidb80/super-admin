@@ -2,7 +2,7 @@ from time import sleep
 from states import app_state
 
 def kill():
-    print('kill')
+    pass
 
 def connection_checker(max_timeout = 5):
     fail_seconds = 0

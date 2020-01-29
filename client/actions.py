@@ -3,8 +3,18 @@ from states import app_state
 from utils import Password
 from time import sleep
 import socket
+import os
 
-
+### colors
+class Colors:
+    red      = '\33[31m'
+    green    = '\33[32m'
+    yellow   = '\33[33m'
+    blue     = '\33[34m'
+    
+    bold     = '\33[1m'
+    italic   = '\33[3m'
+    end      = '\33[0m'
 ### variables
 
 
@@ -13,10 +23,10 @@ import socket
 def connect():
     # change connection status to True
     app_state.is_connected = True
-    app_state.is_waiting = True
 
-    # connection notification
-    print('Connected')
+    # connection notification for admin mode
+    if app_state.is_admin:
+        print(Colors.green+'Connected'+Colors.end)
 
     # send server hostname and new user notification
     connection_initials()
@@ -26,113 +36,110 @@ def disconnect():
     # change connection status to False
     app_state.is_connected = False
     
-    # change command input status to False
-    app_state.is_waiting = False
-
-    # connection notification
-    print('disconnected')
+    # connection notification for admin mode
+    if app_state.is_admin:
+        print(Colors.red+Colors.bold+'disconnected'+Colors.end)
 
 def auth(data):
-    # split server hashed pass and salt
-    data_chunks = data.split('nextis')
-    
-    # encode salt and server's hashed password
-    salt = data_chunks[1].encode('ISO-8859-1')
-    hashedpass = data_chunks[0].encode('ISO-8859-1')
-    
-    # input server's password
-    enteredpass = input("Please enter server's password >\n")
-
-    # make a new hash using the entered password and salt
-    testhash = Password(enteredpass,salt)
-
-    # compare new hash and the server's hash
-    if (testhash.key == hashedpass):
+    # check if user has admin privilages
+    if app_state.is_admin:
+        print(Colors.yellow+'You already have admin privilages!'+Colors.end)
         
-        # send access notification to server
-        tunnel.send('notification', "hasaccess")
-        
-        # give admin rights
-        app_state.is_admin = True
-        print('Admin rights granted')
-        
-        # ask wether to run execinserv()
-        decide = input('Run commands in server now?\n')
-        if "y" in decide:
-            execinserv()
-        
-        else:
-            app_state.is_waiting = True
-
-    # if hashes didn't match
     else:
-        print("Wrong Password")
-        app_state.is_waiting = True
-        tunnel.send('notification', "wrongpass")
+        # input server's password
+        enteredpass = input("Enter server's password >\n")
 
+        # make a new hash using the entered password and salt
+        testhash = Password(enteredpass,data['salt'])
 
+        # compare new hash and the server's hash
+        if (testhash.key == data['key']):
+
+            # give admin rights
+            print(Colors.green+'Admin rights granted'+Colors.end)
+            app_state.is_admin = True
+            client_input()
+            
+        # if entered password was wrong
+        else:
+            print(Colors.red+Colors.bold+'Wrong password!'+Colors.end)
+            # send wrong password notification to server
+            tunnel.send('notification',{'type': 'wrongpass'})
+            
+            # change main input to False
+            app_state.main_input_is_waiting = True
+    
+        
+        
 ### functions independant from events
 
+# client input
+def main_input():
+    
+    while True:
+        
+        while app_state.is_admin==False and app_state.main_input_is_waiting:
+            
+            inp = input(Colors.green+'Mollasadra Client Manager App >\n'+Colors.end)
+        
+            # authenticate
+            if 'auth' in inp:
+                ask_auth()
+                
+                # change main input status
+                app_state.main_input_is_waiting = False
+            
+            # print connection status
+            elif 'status' in inp:
+            
+                if app_state.is_connected:
+                    print(Colors.green+'You are connected'+Colors.end)
+                
+                else:
+                    print(Colors.red+'You are not connected'+Colors.end)
+            sleep(0.5)
+        sleep(2)
+            
+            
 def connection_initials():
     # get hostname
     hostname = socket.gethostname()
     
-    data = "newuser"+" "+hostname
     # send hostname and new user notification to server
-    tunnel.send('notification', data)
+    tunnel.send('notification',{'type': 'connection_initials','hostname': hostname})
 
 # ask for authentication from server
 def ask_auth():
-    # change command input status to Flase
-    app_state.is_waiting = False
     
     # send asked for authentication notification to server
-    tunnel.send('notification', "askforauth")
-
-# get input from user
-def command_input():
-    # always run the function
-    while True:
-        # while waiting for command ask for input and execute it
-        while app_state.is_waiting==True:
-            inp = input('Client >\n')
-            try:
-                exec(inp)
-            except:
-                print("Err")
-            
-            sleep(0.5)
-    sleep(2)
+    tunnel.send('notification',{'type': 'askforauth'})
     
 ### admin functions
 
-# execute commands in server
-def execinserv():
+# run commands in client
+def client_input():
+    while True:
+        while app_state.client_is_waiting and app_state.is_admin:
+            # get user input
+            inp = input('Client >\n')
+            
+            #check if user wants to run code in server
+            if ' -s' in inp:
+                
+                inp = inp.replace(' -s','')
+                print('Sending command',Colors.yellow+inp+Colors.end,'to server')
+                # send command to server
+                tunnel.send('execute', inp)
+
+            elif 'exit' in inp:
+                os.system('clear')
+                app_state.is_admin = False
+                app_state.main_input_is_waiting = True
+                
+            else:
+                try:
+                    exec(inp)
+                except:
+                    print('Err')
     
-    # check if user have admin rights
-    if app_state.is_admin==False:
-        # send illegal command notification
-        print("You don't have admin rights!! go study something you lazy student!")
-        tunnel.send('notification', "illegalcommand")
-
-    # run only when user has admin privilages
-    while app_state.is_admin:
-        # get command input
-        inp = input('Server > \n')
-        
-        # if exit was entered close the loop and accept client commands
-        if "exit" in inp:
-            app_state.is_waiting = True
-            break
-        
-        try:
-            print(f"I got it: {inp}")
-            print(f"I'll send it to the server")
-            
-            # send the user input to server
-            tunnel.send('execute', inp)
-
-        except:
-            print('Err')
-            
-        sleep(0.5)
+    
