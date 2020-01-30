@@ -1,67 +1,69 @@
 from server import tunnel
 from utils import Password
 
-## variables
+from driver.models import Client
 
-clients = {}
-clients_inv = {}
+# TODO: use logger instead of print
+
 
 # set server's password
 passwd = input('Enter Server Password \n')
 serverpass = Password(passwd)
 del passwd
 
-## functions dependant on events
-
-def connect(socket_id, data=None):
-    # user connection notification
-    print(f'user {socket_id} connected')
+# --- functions dependant on events ---
 
 
-def disconnect(socket_id, data=None):
-    # user connection notification
-    print(f'user {clients[socket_id]} disconnected')
+# user connection notification
+def connect(client: Client, data=None):
+    print(f'user {client.socket_id} connected')
+
+
+# user disconnection notification
+def disconnect(client: Client, data=None):
+    name_or_id = client.socket_id if client.is_unknown else client.host_name
+    print(f'user {name_or_id} disconnected')
+
 
 # get notifications using this function
-def notification(socket_id,data):
-    
+def notification(client: Client, data):
+
     # new user notification
-    if data['type']=='connection_initials':
-        # change clients and clients_inv globally
-        global clients, clients_inv
-        
-        # make dictionaries of clients connected to server
-        clients[socket_id] = data['hostname']
-        clients_inv = {v: k for k, v in clients.items()}
-        
-        # anounce new name 
-        print(f'User {socket_id} is now called {clients[socket_id]}')
-        
+    if data['type'] == 'connection_initials':
+        client.host_name = data['hostname']
+        client.save()
+
+        # announce new name
+        print(f'User {client.socket_id} is now called {client.host_name}')
+
     # wrong password notification
-    elif data['type']=='wrongpass':
-        print(f'User {clients[socket_id]} entered a wrong password')
-    
-    # illegal command notification    
-    elif data['type']=='illegalcommand':
-        print(f'User {clients[socket_id]} attempted to run an illegal command')
+    elif data['type'] == 'wrongpass':
+        print(f'User {client.socket_id} entered a wrong password')
+
+    # illegal command notification
+    elif data['type'] == 'illegalcommand':
+        print(f'User {client.socket_id} attempted to run an illegal command')
 
     # access to server notification
-    elif data['type']=='hasaccess':
-        print(f'User {clients[socket_id]} now has access to server')
-    
+    elif data['type'] == 'hasaccess':
+        print(f'User {client.socket_id} now has access to server')
+
     # asking for authentication notification
-    elif data['type']=='askforauth':    
-        print(f'User {clients[socket_id]} asked for running code in server, sending hashed password and salt.')
-        tunnel.send('auth',{'key': serverpass.key, 'salt': serverpass.salt}, socket_id)
-        
-        
-# execute command from client with admin privilages
-def executefromclient(socket_id, data):
-    print(f'User {clients[socket_id]} executed command: {data}')
+    elif data['type'] == 'askforauth':
+        print(
+            f'User {client.socket_id} asked for running code in server, sending hashed password and salt.'
+        )
+
+        # client.send('auth', {'key': serverpass.key,'salt': serverpass.salt})
+        tunnel.send('auth', {'key': serverpass.key,
+                             'salt': serverpass.salt}, client.socket_id)
+
+
+# execute command from client with admin privillages
+def executefromclient(client: Client, data):
+    print(f'User {client.socket_id} executed command: {data}')
 
     try:
         exec(data)
     except:
         print('Err')
-
-## independent functions
