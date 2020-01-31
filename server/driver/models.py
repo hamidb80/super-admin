@@ -1,19 +1,25 @@
-# from server import tunnel
-from tables import clients_manager
+from states import services
+from .database import InMemoryDB
+
 
 class Client:
-    db = clients_manager
-
     def __init__(self, socket_id: str):
         self.socket_id = socket_id
         self.host_name = None
 
     @property
+    def db(self) -> InMemoryDB:
+        return services.clientDB
+
+    @property
     def is_unknown(self):
         return self.host_name is None
 
-    # def send(self, event: str, data=None):
-    #     tunnel.send(event, data, socket_id=self.socket_id)
+    def name_or_id(self):
+        return self.socket_id if self.is_unknown else self.host_name
+
+    def send(self, event: str, data=None):
+        services.tunnel.send(event, data, socket_id=self.socket_id)
 
     def disconnect(self):
         pass
@@ -25,4 +31,3 @@ class Client:
     # delete this client from db
     def delete(self):
         self.db.delete(socket_id=self.socket_id)
-

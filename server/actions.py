@@ -1,15 +1,24 @@
-from server import tunnel
 from utils import Password
-
 from driver.models import Client
 
 # TODO: use logger instead of print
 
 
+# variabales
+serverpass = None
+
 # set server's password
-passwd = input('Enter Server Password \n')
-serverpass = Password(passwd)
-del passwd
+
+
+def get_pass():
+    global serverpass
+
+    passwd = input('Enter Server Password \n')
+    serverpass = Password(passwd)
+    del passwd
+
+
+get_pass()
 
 # --- functions dependant on events ---
 
@@ -38,30 +47,30 @@ def notification(client: Client, data):
 
     # wrong password notification
     elif data['type'] == 'wrongpass':
-        print(f'User {client.socket_id} entered a wrong password')
+        print(f'User {client.name_or_id()} entered a wrong password')
 
     # illegal command notification
     elif data['type'] == 'illegalcommand':
-        print(f'User {client.socket_id} attempted to run an illegal command')
+        print(f'User {client.name_or_id()} attempted to run an illegal command')
 
     # access to server notification
     elif data['type'] == 'hasaccess':
-        print(f'User {client.socket_id} now has access to server')
+        print(f'User {client.name_or_id()} now has access to server')
 
     # asking for authentication notification
     elif data['type'] == 'askforauth':
         print(
-            f'User {client.socket_id} asked for running code in server, sending hashed password and salt.'
+            f'User {client.name_or_id()} asked for running code in server, sending hashed password and salt.'
         )
 
         # client.send('auth', {'key': serverpass.key,'salt': serverpass.salt})
-        tunnel.send('auth', {'key': serverpass.key,
-                             'salt': serverpass.salt}, client.socket_id)
+        client.send('auth', {'key': serverpass.key,
+                             'salt': serverpass.salt})
 
 
 # execute command from client with admin privillages
 def executefromclient(client: Client, data):
-    print(f'User {client.socket_id} executed command: {data}')
+    print(f'User {client.name_or_id()} executed command: {data}')
 
     try:
         exec(data)

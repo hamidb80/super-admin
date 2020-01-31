@@ -1,3 +1,6 @@
 from driver.database import InMemoryDB
+from states import services
 
-clients_manager = InMemoryDB()
+
+def init_databases():
+    services.clientDB = InMemoryDB()

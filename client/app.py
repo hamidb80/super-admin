@@ -6,7 +6,7 @@ from connection_checker import connection_checker
 from actions import main_input
 
 if __name__ == "__main__":
-    
+
     # register events
     for event in event_list:
         tunnel.on(event.name, event.function)
@@ -16,8 +16,6 @@ if __name__ == "__main__":
 
     # start main input
     Thread(target=main_input).start()
-
-
 
     # try to connect to the server
     while True:
