@@ -1,4 +1,3 @@
-from server import tunnel
 from actions import connect, disconnect, executefromclient, notification
 from typing import Callable, List
 

@@ -77,7 +77,7 @@ def main_input():
         while app_state.is_admin is False and app_state.main_input_is_waiting:
 
             inp = input(
-                colored(f'{APP_NAME} >\n', Colors.green)
+                colored(f'{APP_NAME} >\n', Colors.blue)
             )
 
             # authenticate
