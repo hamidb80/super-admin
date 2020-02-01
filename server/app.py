@@ -1,7 +1,7 @@
-from states import services
+from provider import services
 from events import event_list
 from driver.tunnel import Tunnel
-from tables import init_databases
+from tables import init_database
 
 from config import ADDR, PORT
 
@@ -9,7 +9,7 @@ from config import ADDR, PORT
 tunnel = Tunnel(ADDR, PORT)
 services.tunnel = tunnel
 
-init_databases()
+init_database()
 
 # register events
 for event in event_list:

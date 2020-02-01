@@ -1,4 +1,4 @@
-from states import services
+from provider import services
 from .database import InMemoryDB
 
 
@@ -6,6 +6,7 @@ class Client:
     def __init__(self, socket_id: str):
         self.socket_id = socket_id
         self.host_name = None
+        # self.is_admin
 
     @property
     def db(self) -> InMemoryDB:
@@ -14,6 +15,10 @@ class Client:
     @property
     def is_unknown(self):
         return self.host_name is None
+
+    @property
+    def is_authenticated(self):
+        return not self.is_unknown
 
     def name_or_id(self):
         return self.socket_id if self.is_unknown else self.host_name
