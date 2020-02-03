@@ -18,7 +18,7 @@ def connect(client: Client, data=None):
 def disconnect(client: Client, data=None):
     print(f'user {client.name_or_id()} disconnected')
     
-    #client.delete() ***Fix this
+    #client.delete() **fix this
 
 # get notifications using this function
 def notification(client: Client, data):

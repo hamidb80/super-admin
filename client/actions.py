@@ -27,9 +27,8 @@ def disconnect():
     # change connection status to False
     app_state.is_connected = False
 
-    # connection notification for admin mode
-    if app_state.is_admin:
-        cprint('disconnected', Colors.red+Colors.bold)
+
+    cprint('disconnected', Colors.red+Colors.bold)
 
 
 def auth(data):
@@ -137,6 +136,7 @@ def client_input():
                     inp = input('Server >\n')
                     
                     if 'exit' in inp:
+                        cprint('You are running commands in client now.', Colors.yellow+Colors.bold)
                         break
                     
                     elif inp=='':
@@ -151,6 +151,9 @@ def client_input():
                     sleep(1)                
                                      
             elif 'exit' in inp:
+                cprint('Exiting admin mode.', Colors.yellow+Colors.bold)
+                sleep(0.3)
+                
                 os.system('clear')
                 app_state.is_admin = False
                 app_state.main_input_is_waiting = True
