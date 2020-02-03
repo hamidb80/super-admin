@@ -1,11 +1,14 @@
-from connection import tunnel
-from states import app_state
-from utils import Password, Colors, cprint, colored
 from time import sleep
 import socket
 import os
 
 from config import APP_NAME
+
+from connection import tunnel
+from states import app_state
+from utils import Password, Colors, cprint, colored
+
+
 
 # functions dependant on events
 
@@ -44,13 +47,11 @@ def auth(data):
             # make a new hash using the entered password and salt
             testhash = Password(enteredpass, data['salt'])
 
-            # compare new hash and the server's hash
+            # compare the new hash and the server's hash
             if (testhash.key == data['key']):
 
                 # give admin rights
-                cprint('Admin rights granted',
-                       Colors.green
-                       )
+                cprint('Admin rights granted', Colors.green)
 
                 app_state.is_admin = True
                 return client_input()
@@ -58,6 +59,7 @@ def auth(data):
             # if entered password was wrong
             else:
                 cprint('Wrong password!', Colors.red+Colors.bold)
+                
                 # send wrong password notification to server
                 tunnel.send('notification', {'type': 'wrongpass'})
 
@@ -69,6 +71,7 @@ def auth(data):
 
 # functions independent from events
 
+
 # client input
 def main_input():
 
@@ -76,16 +79,14 @@ def main_input():
 
         while app_state.is_admin is False and app_state.main_input_is_waiting:
 
-            inp = input(
-                colored(f'{APP_NAME} >\n', Colors.blue)
-            )
+            inp = input(colored(f'{APP_NAME} >\n', Colors.blue))
 
             # authenticate
             if 'auth' in inp:
-                ask_auth()
-
                 # change main input status
                 app_state.main_input_is_waiting = False
+                
+                return ask_auth()
 
             # print connection status
             elif 'status' in inp:
@@ -95,6 +96,10 @@ def main_input():
 
                 else:
                     cprint('You are not connected', Colors.red)
+            
+            elif 'clear' in inp:
+                os.system('clear')
+                
             sleep(0.5)
         sleep(2)
 
@@ -104,22 +109,20 @@ def connection_initials():
     hostname = socket.gethostname()
 
     # send hostname and new user notification to server
-    tunnel.send('notification', {
-                'type': 'connection_initials', 'hostname': hostname})
+    tunnel.send('notification', {'type': 'connection_initials', 'hostname': hostname})
+
 
 # ask for authentication from server
-
-
 def ask_auth():
 
     # send asked for authentication notification to server
     tunnel.send('notification', {'type': 'askforauth'})
 
+
 # admin functions
 
+
 # run commands in client
-
-
 def client_input():
     while True:
         while app_state.client_is_waiting and app_state.is_admin:
@@ -127,16 +130,26 @@ def client_input():
             inp = input('Client >\n')
 
             # check if user wants to run code in server
-            if ' -s' in inp:
-
-                inp = inp.replace(' -s', '')
-
-                print('Sending command', end='')
-                cprint(f'{inp} to server', Colors.yellow)
-
-                # send command to server
-                tunnel.send('execute', inp)
-
+            if 'server' in inp:
+                cprint('You are running commands in server now.', Colors.yellow+Colors.bold)
+                
+                while True:
+                    inp = input('Server >\n')
+                    
+                    if 'exit' in inp:
+                        break
+                    
+                    elif inp=='':
+                        pass
+                    
+                    else:
+                        print('Sending command', colored(inp,Colors.yellow+Colors.italic+Colors.bold), 'to server')
+                    
+                        # send command to server
+                        tunnel.send('execute', inp)
+                    
+                    sleep(1)                
+                                     
             elif 'exit' in inp:
                 os.system('clear')
                 app_state.is_admin = False

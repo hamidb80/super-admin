@@ -1,6 +1,8 @@
+from typing import Callable, List
+
 from connection import tunnel
 from actions import connect, disconnect, auth
-from typing import Callable, List
+
 
 
 class Event:
@@ -9,7 +11,7 @@ class Event:
 
     def __init__(self, name: str, func: Callable):
         self.name = name
-        self.function = func
+        self.func = func
 
 
 event_list: List[Event] = [

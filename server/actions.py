@@ -1,24 +1,10 @@
-from utils import Password
+import os
+
 from driver.models import Client
-
-# TODO: use logger instead of print
-
-
-# variabales
-serverpass = None
+from utils import set_pass
 
 # set server's password
-
-
-def get_pass():
-    global serverpass
-
-    passwd = input('Enter Server Password \n')
-    serverpass = Password(passwd)
-    del passwd
-
-
-get_pass()
+serverpass = set_pass()
 
 # --- functions dependant on events ---
 
@@ -30,9 +16,9 @@ def connect(client: Client, data=None):
 
 # user disconnection notification
 def disconnect(client: Client, data=None):
-    name_or_id = client.socket_id if client.is_unknown else client.host_name
-    print(f'user {name_or_id} disconnected')
-
+    print(f'user {client.name_or_id()} disconnected')
+    
+    #client.delete() ***Fix this
 
 # get notifications using this function
 def notification(client: Client, data):
@@ -49,23 +35,16 @@ def notification(client: Client, data):
     elif data['type'] == 'wrongpass':
         print(f'User {client.name_or_id()} entered a wrong password')
 
-    # illegal command notification
-    elif data['type'] == 'illegalcommand':
-        print(f'User {client.name_or_id()} attempted to run an illegal command')
-
     # access to server notification
     elif data['type'] == 'hasaccess':
         print(f'User {client.name_or_id()} now has access to server')
 
     # asking for authentication notification
     elif data['type'] == 'askforauth':
-        print(
-            f'User {client.name_or_id()} asked for running code in server, sending hashed password and salt.'
-        )
+        
+        print(f'User {client.name_or_id()} asked for running code in server, sending hashed password and salt.')
 
-        # client.send('auth', {'key': serverpass.key,'salt': serverpass.salt})
-        client.send('auth', {'key': serverpass.key,
-                             'salt': serverpass.salt})
+        client.send('auth', {'key': serverpass.key,'salt': serverpass.salt})
 
 
 # execute command from client with admin privillages

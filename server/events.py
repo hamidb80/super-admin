@@ -1,5 +1,7 @@
-from actions import connect, disconnect, executefromclient, notification
 from typing import Callable, List
+
+from actions import connect, disconnect, executefromclient, notification
+
 
 
 class Event:
@@ -8,7 +10,7 @@ class Event:
 
     def __init__(self, name: str, func: Callable):
         self.name = name
-        self.function = func
+        self.func = func
 
 
 event_list: List[Event] = [

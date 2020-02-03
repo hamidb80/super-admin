@@ -1,4 +1,5 @@
 from time import sleep
+
 from states import app_state
 
 def kill():
