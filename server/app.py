@@ -3,7 +3,7 @@ from config import ADDR, PORT
 from states import services
 from events import event_list
 from driver.tunnel import Tunnel
-from tables import init_databases
+from tables import init_database
 
 # make tunnel instance
 tunnel = Tunnel(ADDR, PORT)
