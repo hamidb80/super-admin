@@ -64,8 +64,7 @@ def auth(data):
 
                 tries += 1
 
-            # change main input to False
-        app_state.main_input_is_waiting = True
+        return main_input()
 
 
 # functions independent from events
@@ -76,15 +75,12 @@ def main_input():
 
     while True:
 
-        while app_state.is_admin is False and app_state.main_input_is_waiting:
+        while app_state.is_admin is False:
 
             inp = input(colored(f'{APP_NAME} >\n', Colors.blue))
 
             # authenticate
             if 'auth' in inp:
-                # change main input status
-                app_state.main_input_is_waiting = False
-                
                 return ask_auth()
 
             # print connection status
@@ -113,7 +109,6 @@ def connection_initials():
 
 # ask for authentication from server
 def ask_auth():
-
     # send asked for authentication notification to server
     tunnel.send('notification', {'type': 'askforauth'})
 
@@ -129,7 +124,7 @@ def client_input():
             inp = input('Client >\n')
 
             # check if user wants to run code in server
-            if 'server' in inp:
+            if 'servermode' in inp:
                 cprint('You are running commands in server now.', Colors.yellow+Colors.bold)
                 
                 while True:
@@ -156,7 +151,8 @@ def client_input():
                 
                 os.system('clear')
                 app_state.is_admin = False
-                app_state.main_input_is_waiting = True
+                
+                return main_input()
 
             else:
                 try:
