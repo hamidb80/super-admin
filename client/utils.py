@@ -25,3 +25,26 @@ def colored(text: str, styles: str):
 
 def cprint(text: str, styles: str):
     return print(colored(text, styles))
+
+
+class Messages:
+    connected = colored('Connected', Colors.green)
+    disconnected = colored('disconnected', Colors.red+Colors.bold)
+
+    you_already_have_admin_priv = colored(
+        'You already have admin privillages!', Colors.yellow
+    )
+
+    admin_rights_granted = colored(
+        'Admin rights granted', Colors.green
+    )
+
+    wrong_pass = colored(
+        'Wrong password!', Colors.red+Colors.bold
+    )
+
+    you_are_connected = colored(
+        'You are connected', Colors.green
+    )
+
+    you_arent_connected = colored('You are not connected', Colors.red)
