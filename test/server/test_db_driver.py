@@ -2,7 +2,7 @@ from server.driver.database import InMemoryDB
 import pytest
 
 
-class TestE2E:
+class Test:
     @classmethod
     def setup_class(self):
         self.db = InMemoryDB()

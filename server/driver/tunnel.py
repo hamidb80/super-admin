@@ -32,10 +32,12 @@ class Tunnel:
         self.socket.emit(event, data=data, room=socket_id)
 
     def run(self):
-        print(f'tunnel is running on {self.connection[0]}:{self.connection[1]}')
+        print(
+            f'tunnel is running on {self.connection[0]}:{self.connection[1]}'
+        )
 
         eventlet.wsgi.server(eventlet.listen(
-            self.connection), self.app, log=default_logger)
+            self.connection), self.app, log = default_logger)
 
     def disconnect(self):
         pass

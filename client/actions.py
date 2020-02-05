@@ -11,24 +11,24 @@ from utils import Password, Colors, cprint, colored, Messages
 # functions dependant on events
 
 
-def connect():
+async def connect():
     # change connection status to True
     app_state.is_connected = True
 
     print(Messages.connected)
 
     # send server hostname and new user notification
-    connection_initials()
+    await connection_initials()
 
 
-def disconnect():
+async def disconnect():
     # change connection status to False
     app_state.is_connected = False
 
     print(Messages.disconnected)
 
 
-def auth(data):
+async def auth(data):
     # check if user has admin privillages
     if app_state.is_admin:
         print(Messages.you_already_have_admin_priv)
@@ -57,7 +57,7 @@ def auth(data):
                 print(Messages.wrong_pass)
 
                 # send wrong password notification to server
-                tunnel.send('notification', {'type': 'wrongpass'})
+                await tunnel.send('notification', {'type': 'wrongpass'})
 
                 tries += 1
 
@@ -96,19 +96,19 @@ def main_input():
         sleep(2)
 
 
-def connection_initials():
+async def connection_initials():
     # get hostname
     hostname = socket.gethostname()
 
     # send hostname and new user notification to server
-    tunnel.send('notification', {
-                'type': 'connection_initials', 'hostname': hostname})
+    await tunnel.send('notification', {
+        'type': 'connection_initials', 'hostname': hostname})
 
 
 # ask for authentication from server
-def ask_auth():
+async def ask_auth():
     # send asked for authentication notification to server
-    tunnel.send('notification', {'type': 'askforauth'})
+    await tunnel.send('notification', {'type': 'askforauth'})
 
 
 # admin functions
