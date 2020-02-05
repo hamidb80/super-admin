@@ -9,7 +9,7 @@ class InMemoryDB:
         res = []
 
         for item in self.data_list:
-            if self._validate(item, indicator) is not True:
+            if self._validate(item, **indicators) is not True:
                 res.append(item)
 
         self.data_list = res
@@ -19,14 +19,6 @@ class InMemoryDB:
             item for item in self.data_list if self._validate(item, **indicators) is True
         ]
 
-    @staticmethod
-    def _validate(item, **indicators):
-        for key, val in indicators.items():
-            if getattr(item, key) != val:
-                return False
-
-        return True
-
     def find(self, **indicators):
         res = self.filter(**indicators)
 
@@ -35,3 +27,14 @@ class InMemoryDB:
 
         else:
             return None
+
+    @staticmethod
+    def _validate(item, **indicators):
+        for key, val in indicators.items():
+            if key == 'equal':
+                if item != val:
+                    return False
+            elif getattr(item, key) != val:
+                return False
+
+        return True
