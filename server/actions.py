@@ -44,14 +44,13 @@ async def notification(client: Client, data):
     # asking for authentication notification
     elif data['type'] == 'askforauth':
 
-        print(
-            f'User {client.name_or_id()} asked for running code in server, sending hashed password and salt.')
+        print(f'User {client.name_or_id()} asked for running code in server, sending hashed password and salt.')
 
         await client.send('auth', {'key': serverpass.key, 'salt': serverpass.salt})
 
 
 # execute command from client with admin privillages
-def executefromclient(client: Client, data):
+async def executefromclient(client: Client, data):
     print(f'User {client.name_or_id()} executed command: {data}')
 
     try:
