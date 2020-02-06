@@ -12,10 +12,10 @@ services.tunnel = tunnel
 
 
 if __name__ == "__main__":
-    
+
     # start database
     init_database()
-    
+
     # register events
     for event in event_list:
         tunnel.on(event.name, event.func)

@@ -61,14 +61,14 @@ async def auth(data):
 
                 tries += 1
 
-        return main_input()
+        return await main_input()
 
 
 # functions independent from events
 
 
 # client input
-def main_input():
+async def main_input():
 
     while True:
 
@@ -78,7 +78,7 @@ def main_input():
 
             # authenticate
             if 'auth' in inp:
-                return ask_auth()
+                await ask_auth()
 
             # print connection status
             elif 'status' in inp:
@@ -92,6 +92,12 @@ def main_input():
             elif 'clear' in inp:
                 os.system('clear')
 
+            elif 'exit' in inp:
+                return
+
+            else:
+                print('::err')
+
             sleep(0.5)
         sleep(2)
 
@@ -102,7 +108,8 @@ async def connection_initials():
 
     # send hostname and new user notification to server
     await tunnel.send('notification', {
-        'type': 'connection_initials', 'hostname': hostname})
+        'type': 'connection_initials', 'hostname': hostname
+    })
 
 
 # ask for authentication from server
@@ -115,7 +122,7 @@ async def ask_auth():
 
 
 # run commands in client
-def client_input():
+async def client_input():
     while True:
         while app_state.client_is_waiting and app_state.is_admin:
             # get user input
@@ -153,7 +160,8 @@ def client_input():
                 os.system('clear')
                 app_state.is_admin = False
 
-                return main_input()
+                await main_input()
+                return
 
             else:
                 try:
