@@ -11,16 +11,15 @@ class Task:
         self.func = func
         self.is_async = is_async
 
-    def run(self, loop: asyncio.BaseEventLoop = None):
+    def run(self):
         thread: Thread
 
         loop = asyncio.new_event_loop()
 
         if self.is_async:
-            def action():
-                loop.run_until_complete(self.func())
-
-            thread = Thread(target=action)
+            thread = Thread(
+                target=lambda: loop.run_until_complete(self.func())
+            )
 
         else:
             thread = Thread(target=self.func)

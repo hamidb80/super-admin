@@ -17,10 +17,12 @@ def connect(client: Client, data=None):
 # user disconnection notification
 def disconnect(client: Client, data=None):
     print(f'user {client.name_or_id()} disconnected')
-    
-    #client.delete() **fix this
+
+    client.delete()
 
 # get notifications using this function
+
+
 def notification(client: Client, data):
 
     # new user notification
@@ -41,10 +43,11 @@ def notification(client: Client, data):
 
     # asking for authentication notification
     elif data['type'] == 'askforauth':
-        
-        print(f'User {client.name_or_id()} asked for running code in server, sending hashed password and salt.')
 
-        client.send('auth', {'key': serverpass.key,'salt': serverpass.salt})
+        print(
+            f'User {client.name_or_id()} asked for running code in server, sending hashed password and salt.')
+
+        client.send('auth', {'key': serverpass.key, 'salt': serverpass.salt})
 
 
 # execute command from client with admin privillages

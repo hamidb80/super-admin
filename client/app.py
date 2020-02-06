@@ -13,6 +13,7 @@ if __name__ == "__main__":
     for event in event_list:
         tunnel.on(event.name, event.func)
 
+    # run background tasks
     for task in task_list:
         task.run()
 

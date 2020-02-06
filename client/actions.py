@@ -29,6 +29,7 @@ async def disconnect():
 
 
 async def auth(data):
+    print('hhey')
     # check if user has admin privillages
     if app_state.is_admin:
         print(Messages.you_already_have_admin_priv)
@@ -50,7 +51,7 @@ async def auth(data):
                 print(Messages.admin_rights_granted)
 
                 app_state.is_admin = True
-                return client_input()
+                return await client_input()
 
             # if entered password was wrong
             else:
@@ -78,7 +79,7 @@ async def main_input():
 
             # authenticate
             if 'auth' in inp:
-                await ask_auth()
+                return await ask_auth()
 
             # print connection status
             elif 'status' in inp:
@@ -149,7 +150,7 @@ async def client_input():
                             inp, Colors.yellow+Colors.italic+Colors.bold), 'to server')
 
                         # send command to server
-                        tunnel.send('execute', inp)
+                        await tunnel.send('execute', inp)
 
                     sleep(1)
 
