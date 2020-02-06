@@ -23,9 +23,10 @@ class Client:
     def name_or_id(self):
         return self.socket_id if self.is_unknown else self.host_name
 
-    def send(self, event: str, data=None):
-        services.tunnel.send(event, data, socket_id=self.socket_id)
+    async def send(self, event: str, data=None):
+        await services.tunnel.send(event, data, socket_id=self.socket_id)
 
+    # TODO:
     def disconnect(self):
         pass
 

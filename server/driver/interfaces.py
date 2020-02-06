@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
-from socketio import Server
+from socketio import AsyncServer
 from typing import Callable
 
 class TunnelIC:
-    socket: Server
+    socket: AsyncServer
 
     @abstractmethod
     def __init__(self, addr: str, port: int):

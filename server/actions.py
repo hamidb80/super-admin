@@ -10,12 +10,12 @@ serverpass = set_pass()
 
 
 # user connection notification
-def connect(client: Client, data=None):
+async def connect(client: Client, data=None):
     print(f'user {client.socket_id} connected')
 
 
 # user disconnection notification
-def disconnect(client: Client, data=None):
+async def disconnect(client: Client, data=None):
     print(f'user {client.name_or_id()} disconnected')
 
     client.delete()
@@ -23,7 +23,7 @@ def disconnect(client: Client, data=None):
 # get notifications using this function
 
 
-def notification(client: Client, data):
+async def notification(client: Client, data):
 
     # new user notification
     if data['type'] == 'connection_initials':
@@ -47,7 +47,7 @@ def notification(client: Client, data):
         print(
             f'User {client.name_or_id()} asked for running code in server, sending hashed password and salt.')
 
-        client.send('auth', {'key': serverpass.key, 'salt': serverpass.salt})
+        await client.send('auth', {'key': serverpass.key, 'salt': serverpass.salt})
 
 
 # execute command from client with admin privillages

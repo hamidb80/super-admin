@@ -2,7 +2,7 @@ from typing import Callable, List
 import asyncio
 from threading import Thread
 
-from connection_checker import connection_checker
+from functions import connection_checker
 from actions import main_input
 
 

@@ -29,7 +29,6 @@ async def disconnect():
 
 
 async def auth(data):
-    print('hhey')
     # check if user has admin privillages
     if app_state.is_admin:
         print(Messages.you_already_have_admin_priv)
