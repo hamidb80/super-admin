@@ -1,10 +1,7 @@
 import os
 
 from driver.models import Client
-from utils import set_pass
-
-# set server's password
-serverpass = set_pass()
+from utils import Password_Manager
 
 # --- functions dependant on events ---
 
@@ -46,7 +43,8 @@ async def notification(client: Client, data):
 
         print(f'User {client.name_or_id()} asked for running code in server, sending hashed password and salt.')
 
-        await client.send('auth', {'key': serverpass.key, 'salt': serverpass.salt})
+        pass_to_send = Password_Manager.password_list['serverpass']
+        await client.send('auth', {'key': pass_to_send.key, 'salt': pass_to_send.salt})
 
 
 # execute command from client with admin privillages

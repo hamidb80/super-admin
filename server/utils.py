@@ -8,10 +8,14 @@ class Password:
         self.key = hashlib.pbkdf2_hmac('sha256',passwd.encode('utf-8'),self.salt,1000000)
 
 
-def set_pass():
+
+def set_serverpass():
     
     passwd = input('Enter Server Password \n')
-    password = Password(passwd)
+    Password_Manager.password_list['serverpass'] = Password(passwd)
     del passwd
-    return(password)
+
+class Password_Manager:
+        password_list={}
+        
 

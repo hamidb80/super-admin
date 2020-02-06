@@ -5,7 +5,7 @@ import os
 
 from connection import tunnel
 from states import app_state
-from utils import Password, Messages, colored
+from utils import Password, Messages
 
 
 
