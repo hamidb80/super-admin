@@ -45,6 +45,7 @@ async def notification(client: Client, data):
 
         pass_to_send = Password_Manager.password_list['serverpass']
         await client.send('auth', {'key': pass_to_send.key, 'salt': pass_to_send.salt})
+        
 
 
 # execute command from client with admin privillages

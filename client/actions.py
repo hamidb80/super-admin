@@ -51,6 +51,8 @@ def auth(data):
                 # give admin rights
                 print(Messages.admin_rights_granted)
 
+                tunnel.send('notification', {'type': 'hasaccess'})
+                
                 app_state.is_admin = True
                 return client_input()
 
@@ -67,6 +69,14 @@ def auth(data):
 
 
 # functions independent from events
+
+def connection_initials():
+    # get hostname
+    hostname = socket.gethostname()
+
+    # send hostname and new user notification to server
+    tunnel.send('notification', {'type': 'connection_initials', 'hostname': hostname})
+
 
 
 # client input
@@ -97,13 +107,6 @@ def main_input():
             sleep(0.5)
         sleep(2)
 
-
-def connection_initials():
-    # get hostname
-    hostname = socket.gethostname()
-
-    # send hostname and new user notification to server
-    tunnel.send('notification', {'type': 'connection_initials', 'hostname': hostname})
 
 
 # ask for authentication from server
