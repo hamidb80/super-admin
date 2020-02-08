@@ -3,22 +3,17 @@ from threading import Thread
 
 from connection import tunnel
 from events import event_list
-from connection_checker import connection_checker
 from actions import main_input
-
-
+from tasks import task_list
 
 if __name__ == "__main__":
-
     # register events
     for event in event_list:
         tunnel.on(event.name, event.func)
 
-    # start connection checker
-    Thread(target=connection_checker).start()
-
-    # start main input
-    Thread(target=main_input).start()
+    # run background tasks
+    for task in task_list:
+        task.run()
 
     # try to connect to the server
     while True:
@@ -26,6 +21,3 @@ if __name__ == "__main__":
             tunnel.run()
         except:
             sleep(1)
-
-
-

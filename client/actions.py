@@ -2,11 +2,9 @@ from time import sleep
 import socket
 import os
 
-
 from connection import tunnel
 from states import app_state
 from utils import Password, Messages
-
 
 
 # functions dependant on events
@@ -25,7 +23,6 @@ def connect():
 def disconnect():
     # change connection status to False
     app_state.is_connected = False
-
 
     print(Messages.disconnected)
 
@@ -52,14 +49,14 @@ def auth(data):
                 print(Messages.admin_rights_granted)
 
                 tunnel.send('notification', {'type': 'hasaccess'})
-                
+
                 app_state.is_admin = True
                 return client_input()
 
             # if entered password was wrong
             else:
                 print(Messages.wrong_pass)
-                
+
                 # send wrong password notification to server
                 tunnel.send('notification', {'type': 'wrongpass'})
 
@@ -75,8 +72,8 @@ def connection_initials():
     hostname = socket.gethostname()
 
     # send hostname and new user notification to server
-    tunnel.send('notification', {'type': 'connection_initials', 'hostname': hostname})
-
+    tunnel.send('notification', {
+                'type': 'connection_initials', 'hostname': hostname})
 
 
 # client input
@@ -100,13 +97,12 @@ def main_input():
 
                 else:
                     print(Messages.you_arent_connected)
-            
+
             elif 'clear' in inp:
                 os.system('clear')
-                
+
             sleep(0.5)
         sleep(2)
-
 
 
 # ask for authentication from server
@@ -128,32 +124,33 @@ def client_input():
             # check if user wants to run code in server
             if 'servermode' in inp:
                 print(Messages.running_in_server)
-                
+
                 while True:
                     inp = input('Server >\n')
-                    
+
                     if 'exit' in inp:
                         print(Messages.running_in_client)
                         break
-                    
-                    elif inp=='':
+
+                    elif inp == '':
                         pass
-                    
+
                     else:
-                        print('Sending command',Messages.input(inp), 'to server')
-                    
+                        print('Sending command',
+                              Messages.input(inp), 'to server')
+
                         # send command to server
                         tunnel.send('execute', inp)
-                    
-                    sleep(1)                
-                                     
+
+                    sleep(1)
+
             elif 'exit' in inp:
                 print(Messages.exiting_admin)
                 sleep(0.3)
-                
+
                 os.system('clear')
                 app_state.is_admin = False
-                
+
                 return main_input()
 
             else:

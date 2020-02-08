@@ -17,5 +17,5 @@ class Event:
 event_list: List[Event] = [
     Event('connect', connect),
     Event('disconnect', disconnect),
-    Event('auth', auth)
+    Event('auth', auth),
 ]
