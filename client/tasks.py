@@ -7,11 +7,11 @@ from actions import main_input
 
 
 class Task:
-    def __init__(self, func: Callable, is_async=False):
+    def __init__(self, func: Callable):
         self.func = func
 
     def run(self):
-        thread = Thread(target=self.func, daemon=True)
+        thread = Thread(target=self.func)
         thread.start()
 
 
