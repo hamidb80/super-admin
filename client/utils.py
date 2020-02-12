@@ -9,47 +9,30 @@ class Password:
             'sha256', passwd.encode('utf-8'), salt, 1000000)
 
 
-class Colors:
-    red = '\33[31m'
-    green = '\33[32m'
-    yellow = '\33[33m'
-    blue = '\33[34m'
-
-    bold = '\33[1m'
-    italic = '\33[3m'
-    end = '\33[0m'
-
-
-def colored(text: str, styles: str):
-    return f'{styles}{text}{Colors.end}'
-
-
-def cprint(text: str, styles: str):
-    return print(colored(text, styles))
-
 class Messages:
     
-    connected = colored('Connected', Colors.green)
+    connected = 'Connected'
     
-    disconnected = colored('disconnected', Colors.red+Colors.bold)
+    disconnected = 'disconnected'
 
-    you_already_have_admin_priv = colored('You already have admin privillages!', Colors.yellow)
+    eror = 'Err'
 
-    admin_rights_granted = colored('Admin rights granted', Colors.green)
+    you_already_have_admin_priv = 'You already have admin privillages!'
 
-    wrong_pass = colored('Wrong password!', Colors.red+Colors.bold)
+    admin_rights_granted = 'Admin rights granted'
 
-    you_are_connected = colored('You are connected', Colors.green)
+    wrong_pass = 'Wrong password!'
 
-    you_arent_connected = colored('You are not connected', Colors.red)
+    you_are_connected = 'You are connected'
+
+    you_arent_connected = 'You are not connected'
     
-    app_name = colored(f'{APP_NAME} >\n', Colors.blue)
+    app_name = f'{APP_NAME} >\n'
     
-    running_in_server = colored('You are running commands in server now.', Colors.yellow+Colors.bold)
+    running_in_server = 'You are running commands in server now.'
     
-    running_in_client = colored('You are running commands in client now.', Colors.yellow+Colors.bold)
+    running_in_client = 'You are running commands in client now.'
     
-    exiting_admin = colored('Exiting admin mode.', Colors.yellow+Colors.bold)
-    
-    def input(inp):
-        return(colored(inp,Colors.yellow+Colors.italic+Colors.bold))
+    exiting_admin = 'Exiting admin mode.'
+
+    enter_pass = "Enter server's password >\n"

@@ -37,7 +37,7 @@ def auth(data):
 
         while tries < 3:
             # input server's password
-            enteredpass = input("Enter server's password >\n")
+            enteredpass = input(Messages.enter_pass)
 
             # make a new hash using the entered password and salt
             testhash = Password(enteredpass, data['salt'])
@@ -72,8 +72,13 @@ def connection_initials():
     hostname = socket.gethostname()
 
     # send hostname and new user notification to server
-    tunnel.send('notification', {
-                'type': 'connection_initials', 'hostname': hostname})
+    tunnel.send('notification', {'type': 'connection_initials', 'hostname': hostname})
+
+
+# ask for authentication from server
+def ask_auth():
+    # send asked for authentication notification to server
+    tunnel.send('notification', {'type': 'askforauth'})
 
 
 # client input
@@ -105,11 +110,6 @@ def main_input():
         sleep(2)
 
 
-# ask for authentication from server
-def ask_auth():
-    # send asked for authentication notification to server
-    tunnel.send('notification', {'type': 'askforauth'})
-
 
 # admin functions
 
@@ -117,12 +117,25 @@ def ask_auth():
 # run commands in client
 def client_input():
     while True:
-        while app_state.client_is_waiting and app_state.is_admin:
+        while app_state.is_admin:
             # get user input
             inp = input('Client >\n')
 
+            if 'exit' in inp:
+                print(Messages.exiting_admin)
+                sleep(0.5)
+
+                os.system('clear')
+                app_state.is_admin = False
+
+                return main_input()
+
+            elif inp == '':
+                pass
+
+
             # check if user wants to run code in server
-            if 'servermode' in inp:
+            elif 'servermode' in inp:
                 print(Messages.running_in_server)
 
                 while True:
@@ -136,25 +149,14 @@ def client_input():
                         pass
 
                     else:
-                        print('Sending command',
-                              Messages.input(inp), 'to server')
+                        print(f'Sending command {inp} to server')
 
                         # send command to server
                         tunnel.send('execute', inp)
 
                     sleep(1)
-
-            elif 'exit' in inp:
-                print(Messages.exiting_admin)
-                sleep(0.3)
-
-                os.system('clear')
-                app_state.is_admin = False
-
-                return main_input()
-
             else:
                 try:
                     exec(inp)
                 except:
-                    print('Err')
+                    print(Messages.eror)
