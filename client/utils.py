@@ -17,15 +17,15 @@ class Messages:
 
     eror = 'Err'
 
-    you_already_have_admin_priv = 'You already have admin privillages!'
+    you_are_admin = 'You already have admin privillages!'
 
-    admin_rights_granted = 'Admin rights granted'
+    admin_granted = 'Admin rights granted'
 
     wrong_pass = 'Wrong password!'
 
-    you_are_connected = 'You are connected'
+    yconnected = 'You are connected'
 
-    you_arent_connected = 'You are not connected'
+    ynotconnected = 'You are not connected'
     
     app_name = f'{APP_NAME} >\n'
     

@@ -27,10 +27,13 @@ def disconnect():
     print(Messages.disconnected)
 
 
+def ischecked(data):
+    app_state.fails -= 1
+
 def auth(data):
     # check if user has admin privillages
     if app_state.is_admin:
-        print(Messages.you_already_have_admin_priv)
+        print(Messages.you_are_admin)
 
     else:
         tries = 0
@@ -46,7 +49,7 @@ def auth(data):
             if (testhash.key == data['key']):
 
                 # give admin rights
-                print(Messages.admin_rights_granted)
+                print(Messages.admin_granted)
 
                 tunnel.send('notification', {'type': 'hasaccess'})
 
@@ -81,6 +84,12 @@ def ask_auth():
     tunnel.send('notification', {'type': 'askforauth'})
 
 
+# check connection status
+def check():
+    tunnel.send('checkme',data=None)
+    app_state.fails += 1
+    
+
 # client input
 def main_input():
 
@@ -90,25 +99,24 @@ def main_input():
 
             inp = input(Messages.app_name)
 
-            # authenticate
-            if 'auth' in inp:
-                return ask_auth()
-
             # print connection status
-            elif 'status' in inp:
+            if 'status' in inp:
 
                 if app_state.is_connected:
-                    print(Messages.you_are_connected)
+                    print(Messages.yconnected)
 
                 else:
-                    print(Messages.you_arent_connected)
+                    print(Messages.ynotconnected)
+
+            # authenticate
+            elif 'auth' in inp:
+                return ask_auth()
 
             elif 'clear' in inp:
-                os.system('clear')
+                os.system('cls')
 
             sleep(0.5)
         sleep(2)
-
 
 
 # admin functions
@@ -121,27 +129,28 @@ def client_input():
             # get user input
             inp = input('Client >\n')
 
-            if 'exit' in inp:
+            if inp == 'exit':
                 print(Messages.exiting_admin)
                 sleep(0.5)
-
-                os.system('clear')
+                os.system('cls')
                 app_state.is_admin = False
 
                 return main_input()
 
             elif inp == '':
                 pass
-
+            
+            elif inp == 'clear':
+                os.system('cls')
 
             # check if user wants to run code in server
-            elif 'servermode' in inp:
+            elif inp == 'servermode':
                 print(Messages.running_in_server)
 
                 while True:
                     inp = input('Server >\n')
 
-                    if 'exit' in inp:
+                    if inp == 'exit':
                         print(Messages.running_in_client)
                         break
 
@@ -160,3 +169,9 @@ def client_input():
                     exec(inp)
                 except:
                     print(Messages.eror)
+
+
+def lock():
+    print('locked') # for test
+    #os.system('rundll32.exe user32.dll,LockWorkStation')
+

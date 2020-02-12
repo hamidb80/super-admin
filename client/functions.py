@@ -1,23 +1,25 @@
 from time import sleep
 
+from config import ADDR
 from states import app_state
+from actions import lock, check
 
-def kill():
-    pass
-
-def connection_checker(max_timeout = 5):
-    fail_seconds = 0
-
+def connection_checker():
     while True:
-        if app_state.is_connected is True:
-            fail_seconds = 0
 
-        else:
-            fail_seconds += 1
+        if app_state.is_connected:
+            # reset fails to zero
+            app_state.fails = 0
 
-            if fail_seconds > max_timeout:
-                fail_seconds = 0
+            # check while connected
+            while app_state.is_connected:
+                check()
+                sleep(1)
 
-                kill()
+                if app_state.fails > 3:
+                    app_state.is_connected = False
 
-        sleep(1)
+        elif app_state.is_connected is False:
+            lock()
+            sleep(5)
+            

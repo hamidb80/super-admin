@@ -1,6 +1,6 @@
 from typing import Callable, List
 
-from actions import connect, disconnect, executefromclient, notification
+from actions import connect, disconnect, executefromclient, notification, checkit
 
 
 
@@ -17,5 +17,6 @@ event_list: List[Event] = [
     Event('connect', connect),
     Event('disconnect', disconnect),
     Event('notification', notification),
-    Event('execute', executefromclient)
+    Event('execute', executefromclient),
+    Event('checkme', checkit)
 ]

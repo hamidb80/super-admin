@@ -17,6 +17,11 @@ async def disconnect(client: Client, data=None):
 
     client.delete()
 
+# send online status to client
+async def checkit(client: Client, data=None):
+    await client.send('checked',data=None)
+
+
 # get notifications using this function
 
 
