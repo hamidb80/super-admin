@@ -4,7 +4,7 @@ from typing import Callable, Any
 
 class Tunnel:
     def __init__(self, addr, port):
-        self.socket = Client()
+        self.socket = Client(reconnection=False)
         self.address = (addr, port)
 
     # add event
@@ -16,4 +16,6 @@ class Tunnel:
 
     def run(self):
         self.socket.connect(f'http://{self.address[0]}:{self.address[1]}')
+
+    def wait(self):
         self.socket.wait()
