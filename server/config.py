@@ -1,1 +1,1 @@
-ADDR, PORT = '192.168.1.3', 2020
+ADDR, PORT = 'localhost', 2020

@@ -20,7 +20,3 @@ class TunnelIC:
     @abstractmethod
     def run(self):
         pass
-
-    @abstractmethod
-    def disconnect(self):
-        pass
