@@ -20,7 +20,7 @@ class TunnelIC:
         pass
 
     @abstractmethod
-    def send(self, message):
+    def send(self, event: str, target: str, data: Any):
         pass
 
     @abstractmethod

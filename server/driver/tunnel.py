@@ -23,8 +23,9 @@ class Tunnel:
     def push_event(self, event: str, client: Client, data: Any):
         return self.event_map[event](client, data)
 
-    def send(self, message: Message):
-        services.messageDB.add(Message)
+    def send(self, event: str, target: str, data: Any):
+        new_msg = Message(target, event, data)
+        new_msg.save()
 
     def init_routes(self):
         # self.app.add_url_rule('/messages/',
