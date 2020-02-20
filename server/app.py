@@ -23,8 +23,8 @@ if __name__ == "__main__":
     init_database()
 
     # register events
-    # for event in event_list:
-    #     tunnel.on(event.name, event.func)
+    for event in event_list:
+        tunnel.on(event.name, event.func)
 
     # start server
     tunnel.run()

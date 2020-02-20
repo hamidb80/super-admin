@@ -1,4 +1,4 @@
-from server.driver.database import InMemoryDB
+from server.driver.db import InMemoryDB
 import pytest
 
 

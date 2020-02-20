@@ -1,4 +1,4 @@
-from typing import Callable, List, Dict
+from typing import Callable, List, Dict, Any
 
 from .models import Client, Message
 from .views import login_view, commit_view, messages_view
@@ -11,21 +11,17 @@ class Tunnel:
     event_map: Dict[str, Callable]
 
     def __init__(self, addr, port):
+        self.event_map = dict()
+
         self.connection = (addr, port)
         self.app = Flask('tunnel')
-        self.event_map = dict()
 
     def on(self, event: str, func: Callable):
         # func (client:Client): ...
         self.event_map[event] = func
 
-    def push_event(self, event: str, client_name: str):
-        client = services.clientDB.exists(host_name=client_name)
-
-        if client is None:
-            client = Client(client_name)
-
-        return self.event_map[event](client)
+    def push_event(self, event: str, client: Client, data: Any):
+        return self.event_map[event](client, data)
 
     def send(self, message: Message):
         services.messageDB.add(Message)
@@ -46,4 +42,5 @@ class Tunnel:
 
     def run(self):
         self.init_routes()
-        self.app.run(host=self.connection[0], port=self.connection[1], debug=True)
+        self.app.run(host=self.connection[0],
+                     port=self.connection[1], debug=True)

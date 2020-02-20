@@ -12,8 +12,10 @@ def get_client(host_name) -> Client:
 def messages_view(host_name: str):
     client = get_client(host_name)
 
-    m: Message
-    res: List[Message] = services.messageDB.filter(lambda m: m.is_target(client))
+    def check(m: Message):
+        return m.is_target(client)
+
+    res: List[Message] = services.messageDB.filter(check)
 
     res = [message.jsonify() for message in res]
 
@@ -22,26 +24,18 @@ def messages_view(host_name: str):
 
 def commit_view():
     client_name = request.args.get('client_name')
-
     client = get_client(client_name)
 
     if client:
-        client.is_admin = True
-
-    if client and client.is_admin:
-        target = request.args.get('target')
         event = request.args.get('event')
         data = request.args.get('data')
 
-        new_msg = Message(
-            target=target,
-            event=event,
-            data=data
-        )
+        if event is None:
+            return 'event should be defined'
 
-        new_msg.save()
-
-        return new_msg.jsonify()
+        else:
+            services.tunnel.push_event(event, client, data)
+            return 'message committed'
 
     else:
         return 'access denied'

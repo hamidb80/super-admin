@@ -6,7 +6,7 @@ from utils import Password_Manager
 
 # user connection notification
 def connect(client: Client, data=None):
-    print(f'user {client.socket_id} connected')
+    print(f'user {client.host_name} connected')
 
 
 # user disconnection notification

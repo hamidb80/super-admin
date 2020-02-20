@@ -1,12 +1,14 @@
 from abc import ABC, abstractmethod
-from socketio import AsyncServer
-from typing import Callable
+from typing import Dict, Callable, Any
+from flask import Flask
+
 
 class TunnelIC:
-    socket: AsyncServer
+    event_map: Dict[str, Callable]
+    app: Flask
 
     @abstractmethod
-    def __init__(self, addr: str, port: int):
+    def __init__(self, addr, port):
         pass
 
     @abstractmethod
@@ -14,7 +16,11 @@ class TunnelIC:
         pass
 
     @abstractmethod
-    def send(self, event: str, data=None, socket_id=None):
+    def push_event(self, event: str, client, data: Any):
+        pass
+
+    @abstractmethod
+    def send(self, message):
         pass
 
     @abstractmethod
