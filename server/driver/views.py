@@ -11,6 +11,9 @@ def get_client(host_name) -> Client:
 
 def messages_view(host_name: str):
     client = get_client(host_name)
+    client.update_connection_time()
+
+    # TODO: delete expaired messages
 
     def check(m: Message):
         return m.is_target(client)
