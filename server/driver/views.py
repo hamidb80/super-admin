@@ -6,7 +6,13 @@ from provider import services
 
 
 def get_client(host_name) -> Client:
-    return services.clientDB.find(host_name=host_name)
+    client = services.clientDB.find(host_name=host_name)
+
+    if client is None:
+        client = Client(host_name)
+        client.save()
+
+    return client
 
 
 def messages_view(host_name: str):
@@ -18,7 +24,7 @@ def messages_view(host_name: str):
     def check(m: Message):
         return m.is_target(client)
 
-    res: List[Message] = services.messageDB.filter(check)
+    res: List[Message] = services.messageDB.filter(func_checker=check)
 
     res = [message.jsonify() for message in res]
 
@@ -42,16 +48,3 @@ def commit_view():
 
     else:
         return 'access denied'
-
-
-def login_view():
-    client_name = request.args.get('client_name')
-
-    if services.clientDB.exists(host_name=client_name):
-        return 'dup'
-
-    else:
-        new_client = Client(client_name)
-        new_client.save()
-
-        return 'hey'

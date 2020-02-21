@@ -1,7 +1,7 @@
 from typing import Callable, List, Dict, Any
 
 from .models import Client, Message
-from .views import login_view, commit_view, messages_view
+from .views import commit_view, messages_view
 from provider import services
 
 from flask import Flask, request, Response
@@ -36,10 +36,6 @@ class Tunnel:
         self.app.add_url_rule('/commit/',
                               methods=["POST", "GET"],
                               view_func=commit_view)
-
-        self.app.add_url_rule('/login/',
-                              methods=["POST", "GET"],
-                              view_func=login_view)
 
     def run(self):
         self.init_routes()

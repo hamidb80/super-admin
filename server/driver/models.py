@@ -70,7 +70,7 @@ class Message(Model):
     def is_expaired(self) -> bool:
         delta_time: timedelta = datetime.now() - self.time
 
-        return delta_time.seconds < self.expaired_after
+        return delta_time.seconds > self.expaired_after
 
     def save(self):
         self.time = datetime.now()
