@@ -13,7 +13,7 @@ class Job:
 
     def run(self):
         sleep(self.start_delay)
-        Thread(target=self._go()).start()
+        Thread(target=self._go).start()
 
     def _go(self):
         while True:
