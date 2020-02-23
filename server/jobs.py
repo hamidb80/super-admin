@@ -12,10 +12,11 @@ class Job:
         self.start_delay = start_delay
 
     def run(self):
-        sleep(self.start_delay)
         Thread(target=self._go()).start()
 
     def _go(self):
+        sleep(self.start_delay)
+
         while True:
             self.func()
             sleep(self.repeat_after)

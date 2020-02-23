@@ -19,12 +19,16 @@ def messages_view(host_name: str):
     client = get_client(host_name)
     client.update_connection_time()
 
-    # TODO: delete expaired messages
-
     def check(m: Message):
-        return m.is_target(client)
+        return m._id > client.last_seen_message_id and m.is_target(client)
 
     res: List[Message] = services.messageDB.filter(func_checker=check)
+
+    # update client last_seen_message_id
+    if len(res):
+        msg_ids = [m._id for m in res]
+        max_id = max(*msg_ids)
+        client.last_seen_message_id = max_id
 
     res = [message.jsonify() for message in res]
 

@@ -27,6 +27,7 @@ class Model:
 class Client(Model):
     # per secs
     offline_after = 1
+    last_seen_message_id = -1
 
     def __init__(self, host_name: str):
         self.host_name = host_name
@@ -78,8 +79,7 @@ class Message(Model):
         super().save()
 
     def jsonify(self):
-        return dict(target=self.target, event=self.event, data=self.data,
-                    id=self._id)
+        return dict(event=self.event, data=self.data)
 
     def is_target(self, client: Client):
         if self.target == 'admin':

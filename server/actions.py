@@ -1,24 +1,14 @@
 from driver.models import Client
 from utils import Password_Manager
 
-# --- functions dependant on events ---
-
-
 # user connection notification
+
+
 def connect(client: Client, data=None):
     print(f'user {client.host_name} connected')
 
 
-# user disconnection notification
-def disconnect(client: Client, data=None):
-    print(f'user {client.host_name} disconnected')
-
-    client.delete()
-
-
 # get notifications using this function
-
-
 def notification(client: Client, data):
 
     # wrong password notification
