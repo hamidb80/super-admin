@@ -1,9 +1,9 @@
 from typing import Callable
 
+all_pass = lambda *args: True
+
 
 class InMemoryDB:
-    def all_pass(*args): return True
-
     def __init__(self, data: list = None):
         self.data_list = data if data else list()
         self.last_id = 0
@@ -15,7 +15,7 @@ class InMemoryDB:
         self.data_list.append(item)
         self.update_last_id()
 
-    def multi_add(self, data:list):
+    def multi_add(self, data: list):
         for d in data:
             self.add(d)
 
@@ -36,10 +36,10 @@ class InMemoryDB:
         ]
 
     def all(self):
-        return self.filter(func_checker=self.all_pass)
+        return self.filter(func_checker=all_pass)
 
     def clear(self):
-        return self.delete(self.all_pass)
+        return self.delete(func_checker=all_pass)
 
     def exists(self, func_checker: Callable = None, **indicators):
         return bool(self.find(func_checker=func_checker, **indicators))
