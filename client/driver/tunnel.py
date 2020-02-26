@@ -4,8 +4,10 @@ from threading import Thread
 from time import sleep
 from provider import states, services
 
+from .interface import TunnelIC
 
-class Tunnel:
+
+class Tunnel(TunnelIC):
     event_map: Dict[str, Callable] = dict()
     delay = 0.1
 
@@ -17,7 +19,7 @@ class Tunnel:
     def on(self, event: str, func: Callable):
         self.event_map[event] = func
 
-    def push_event(self, event: str, data: Any= None):
+    def push_event(self, event: str, data: Any = None):
         func = self.event_map.get(event)
 
         if func:
@@ -51,6 +53,9 @@ class Tunnel:
 
         for message in message_list:
             self.push_event(message['event'], message['data'])
+
+    def disconnect(self):
+        self.is_active = False
 
     def run(self):
         self.is_active = True

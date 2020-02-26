@@ -2,11 +2,11 @@ from driver.core import Core
 from driver.interface import TunnelIC
 
 
-class Services:
+class ServicesManager:
     core: Core
     tunnel: TunnelIC
 
-services = Services()
+services = ServicesManager()
 
 class StateManager:
     def __init__(self):
