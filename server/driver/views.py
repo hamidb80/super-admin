@@ -19,6 +19,8 @@ def messages_view(host_name: str):
     client = get_client(host_name)
     client.update_connection_time()
 
+    services.tunnel.push_event('connect', client, None)
+
     def check(m: Message):
         return m._id > client.last_seen_message_id and m.is_target(client)
 
@@ -27,7 +29,7 @@ def messages_view(host_name: str):
     # update client last_seen_message_id
     if len(res):
         msg_ids = [m._id for m in res]
-        max_id = max(*msg_ids)
+        max_id = max(msg_ids)
         client.last_seen_message_id = max_id
 
     res = [message.jsonify() for message in res]

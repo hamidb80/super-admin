@@ -12,12 +12,7 @@ class Job:
         self.start_delay = start_delay
 
     def run(self):
-<<<<<<< HEAD
-        Thread(target=self._go()).start()
-=======
-        sleep(self.start_delay)
         Thread(target=self._go).start()
->>>>>>> 3069df0a9e1cdaa8ffdfd7381ce1628173b4d39d
 
     def _go(self):
         sleep(self.start_delay)

@@ -1,11 +1,13 @@
-from driver.models import Client
+from driver.models import Client, Message
 from utils import Password_Manager
-
 # user connection notification
 
 
 def connect(client: Client, data=None):
     print(f'user {client.host_name} connected')
+
+    new_msg = Message(client.host_name, 'hello', 'hello')
+    new_msg.save()
 
 
 # get notifications using this function
