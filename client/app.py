@@ -1,28 +1,28 @@
 from time import sleep
 from threading import Thread
 
-from connection import tunnel
+from config import ADDR, PORT
 from events import event_list
-from actions import main_input
 from tasks import task_list
-from states import app_state
+from provider import states
+from functions import get_host_name
 from driver.core import Core
+from driver.tunnel import Tunnel
+
 
 if __name__ == "__main__":
 
-    app_state.core = Core(debug_mode=False)
+    states.core = Core(debug_mode=False)
+
+    states.tunnel = Tunnel(ADDR, PORT)
+    states.host_name = get_host_name()
 
     # register events
     for event in event_list:
-        tunnel.on(event.name, event.func)
+        states.tunnel .on(event.name, event.func)
 
     # run background tasks
     for task in task_list:
         task.run()
 
-    # try to connect to the server at the first time
-    while True:
-        try:
-            tunnel.run()
-        except:
-            sleep(1)
+    states.tunnel.run()

@@ -1,38 +1,25 @@
 from time import sleep
-import socket
 import os
-
-from connection import tunnel
-from states import app_state
+from provider import states
 from utils import Password, Messages
 
 
 # functions dependant on events
-
-
-def connect():
-    # change connection status to True
-    app_state.is_connected = True
-
+def connect(data):
     print(Messages.connected)
 
-    # send server hostname and new user notification
-    connection_initials()
 
-
-def disconnect():
-    # change connection status to False
-    app_state.is_connected = False
-
+def disconnect(data):
     print(Messages.disconnected)
 
 
-def ischecked(data):
-    app_state.fails -= 1
+def hello(data=None):
+    print('server said hello')
+
 
 def auth(data):
     # check if user has admin privillages
-    if app_state.is_admin:
+    if states.is_admin:
         print(Messages.you_are_admin)
 
     else:
@@ -51,9 +38,9 @@ def auth(data):
                 # give admin rights
                 print(Messages.admin_granted)
 
-                tunnel.send('notification', {'type': 'hasaccess'})
+                states.tunnel.send('notification', {'type': 'hasaccess'})
 
-                app_state.is_admin = True
+                states.is_admin = True
                 return client_input()
 
             # if entered password was wrong
@@ -61,48 +48,32 @@ def auth(data):
                 print(Messages.wrong_pass)
 
                 # send wrong password notification to server
-                tunnel.send('notification', {'type': 'wrongpass'})
+                states.tunnel.send('notification', {'type': 'wrongpass'})
 
                 tries += 1
 
         return main_input()
 
 
-# functions independent from events
-
-def connection_initials():
-    # get hostname
-    hostname = socket.gethostname()
-
-    # send hostname and new user notification to server
-    tunnel.send('notification', {'type': 'connection_initials', 'hostname': hostname})
-
-
 # ask for authentication from server
 def ask_auth():
     # send asked for authentication notification to server
-    tunnel.send('notification', {'type': 'askforauth'})
+    states.tunnel.send('notification', {'type': 'askforauth'})
 
-
-# check connection status
-def check():
-    tunnel.send('checkme',data=None)
-    app_state.fails += 1
-    
 
 # client input
 def main_input():
 
     while True:
 
-        while app_state.is_admin is False:
+        while states.is_admin is False:
 
             inp = input(Messages.app_name)
 
             # print connection status
             if 'status' in inp:
 
-                if app_state.is_connected:
+                if states.is_connected:
                     print(Messages.yconnected)
 
                 else:
@@ -125,7 +96,7 @@ def main_input():
 # run commands in client
 def client_input():
     while True:
-        while app_state.is_admin:
+        while states.is_admin:
             # get user input
             inp = input('Client >\n')
 
@@ -133,13 +104,13 @@ def client_input():
                 print(Messages.exiting_admin)
                 sleep(0.5)
                 os.system('cls')
-                app_state.is_admin = False
+                states.is_admin = False
 
                 return main_input()
 
             elif inp == '':
                 pass
-            
+
             elif inp == 'clear':
                 os.system('cls')
 
@@ -161,7 +132,7 @@ def client_input():
                         print(f'Sending command {inp} to server')
 
                         # send command to server
-                        tunnel.send('execute', inp)
+                        states.tunnel.send('execute', inp)
 
                     sleep(1)
             else:
@@ -172,6 +143,5 @@ def client_input():
 
 
 def lock():
-    print('locked') # for test
+    print('locked')  # for test
     #os.system('rundll32.exe user32.dll,LockWorkStation')
-
