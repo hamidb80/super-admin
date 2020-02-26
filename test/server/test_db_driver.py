@@ -14,24 +14,29 @@ class Test:
 
     def test_remove(self):
         self.db.add('data')
-        self.db.delete(equal='data')
+        self.db.delete(itself='data')
 
         assert self.db.data_list == []
 
     def test_get(self):
-        self.db.add('b')
-        self.db.add('b')
-        self.db.add('a')
+        self.db.multi_add(['a', 'b', 'b'])
 
-        res = self.db.find(equal='b')
+        res = self.db.find(itself='b')
 
         assert res == 'b'
 
     def test_filter(self):
-        self.db.add('c')
-        self.db.add('c')
-        self.db.add('d')
+        self.db.multi_add(['c', 'c', 'd'])
 
-        res = self.db.filter(equal='c')
+        res = self.db.filter(itself='c')
 
         assert res == ['c', 'c']
+
+    def test_func_checker(self):
+        self.db.clear()
+
+        self.db.multi_add(['hamid', 'ali', 'reza'])
+
+        res = self.db.filter(lambda name: len(name) > 3)
+
+        assert set(res) == set(('hamid', 'reza'))

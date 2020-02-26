@@ -2,6 +2,8 @@ from typing import Callable
 
 
 class InMemoryDB:
+    def all_pass(*args): return True
+
     def __init__(self, data: list = None):
         self.data_list = data if data else list()
         self.last_id = 0
@@ -12,6 +14,10 @@ class InMemoryDB:
     def add(self, item):
         self.data_list.append(item)
         self.update_last_id()
+
+    def multi_add(self, data:list):
+        for d in data:
+            self.add(d)
 
     def delete(self, func_checker: Callable = None, **indicators):
         res = []
@@ -28,6 +34,12 @@ class InMemoryDB:
                 item, func_checker=func_checker, **indicators
             )
         ]
+
+    def all(self):
+        return self.filter(func_checker=self.all_pass)
+
+    def clear(self):
+        return self.delete(self.all_pass)
 
     def exists(self, func_checker: Callable = None, **indicators):
         return bool(self.find(func_checker=func_checker, **indicators))
@@ -47,7 +59,7 @@ class InMemoryDB:
             return False
 
         for key, val in indicators.items():
-            if key == 'equal':
+            if key == 'itself':
                 if item != val:
                     return False
             elif getattr(item, key) != val:
