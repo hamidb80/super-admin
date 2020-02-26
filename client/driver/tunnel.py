@@ -2,7 +2,7 @@ from typing import Callable, Any, Dict
 import requests
 from threading import Thread
 from time import sleep
-from provider import states
+from provider import states, services
 
 
 class Tunnel:
@@ -25,7 +25,7 @@ class Tunnel:
             thread.run()
 
         else:
-            print(f'the {event} event is not defined')
+            services.core.print(f'the {event} event is not defined')
 
     def send(self, event: str, data: Any = None):
         params = dict(

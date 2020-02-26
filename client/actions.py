@@ -1,33 +1,33 @@
 from time import sleep
 import os
-from provider import states
+from provider import states, services
 from utils import Password, Messages
 
 
 # functions dependant on events
 def connect(data):
-    print(Messages.connected)
+    services.core.print(Messages.connected)
 
 
 def disconnect(data):
-    print(Messages.disconnected)
+    services.core.print(Messages.disconnected)
 
 
 def hello(data=None):
-    print('server said hello')
+    services.core.print('server said hello')
 
 
 def auth(data):
     # check if user has admin privillages
     if states.is_admin:
-        print(Messages.you_are_admin)
+        services.core.print(Messages.you_are_admin)
 
     else:
         tries = 0
 
         while tries < 3:
-            # input server's password
-            enteredpass = input(Messages.enter_pass)
+            # services.core.input server's password
+            enteredpass = services.core.input(Messages.enter_pass)
 
             # make a new hash using the entered password and salt
             testhash = Password(enteredpass, data['salt'])
@@ -36,19 +36,19 @@ def auth(data):
             if (testhash.key == data['key']):
 
                 # give admin rights
-                print(Messages.admin_granted)
+                services.core.print(Messages.admin_granted)
 
-                states.tunnel.send('notification', {'type': 'hasaccess'})
+                services.tunnel.send('notification', {'type': 'hasaccess'})
 
                 states.is_admin = True
                 return client_input()
 
             # if entered password was wrong
             else:
-                print(Messages.wrong_pass)
+                services.core.print(Messages.wrong_pass)
 
                 # send wrong password notification to server
-                states.tunnel.send('notification', {'type': 'wrongpass'})
+                services.tunnel.send('notification', {'type': 'wrongpass'})
 
                 tries += 1
 
@@ -58,33 +58,33 @@ def auth(data):
 # ask for authentication from server
 def ask_auth():
     # send asked for authentication notification to server
-    states.tunnel.send('notification', {'type': 'askforauth'})
+    services.tunnel.send('notification', {'type': 'askforauth'})
 
 
-# client input
+# client services.core.input
 def main_input():
 
     while True:
 
         while states.is_admin is False:
 
-            inp = input(Messages.app_name)
+            inp = services.core.input(Messages.app_name)
 
-            # print connection status
+            # services.core.print connection status
             if 'status' in inp:
 
                 if states.is_connected:
-                    print(Messages.yconnected)
+                    services.core.print(Messages.yconnected)
 
                 else:
-                    print(Messages.ynotconnected)
+                    services.core.print(Messages.ynotconnected)
 
             # authenticate
             elif 'auth' in inp:
                 return ask_auth()
 
             elif 'clear' in inp:
-                os.system('cls')
+                services.core.clear_console()
 
             sleep(0.5)
         sleep(2)
@@ -97,13 +97,13 @@ def main_input():
 def client_input():
     while True:
         while states.is_admin:
-            # get user input
-            inp = input('Client >\n')
+            # get user services.core.input
+            inp = services.core.input('Client >\n')
 
             if inp == 'exit':
-                print(Messages.exiting_admin)
+                services.core.print(Messages.exiting_admin)
                 sleep(0.5)
-                os.system('cls')
+                services.core.clear_console()
                 states.is_admin = False
 
                 return main_input()
@@ -112,36 +112,36 @@ def client_input():
                 pass
 
             elif inp == 'clear':
-                os.system('cls')
+                services.core.clear_console()
 
             # check if user wants to run code in server
             elif inp == 'servermode':
-                print(Messages.running_in_server)
+                services.core.print(Messages.running_in_server)
 
                 while True:
-                    inp = input('Server >\n')
+                    inp = services.core.input('Server >\n')
 
                     if inp == 'exit':
-                        print(Messages.running_in_client)
+                        services.core.print(Messages.running_in_client)
                         break
 
                     elif inp == '':
                         pass
 
                     else:
-                        print(f'Sending command {inp} to server')
+                        services.core.print(f'Sending command {inp} to server')
 
                         # send command to server
-                        states.tunnel.send('execute', inp)
+                        services.tunnel.send('execute', inp)
 
                     sleep(1)
             else:
                 try:
                     exec(inp)
                 except:
-                    print(Messages.eror)
+                    services.core.print(Messages.eror)
 
 
 def lock():
-    print('locked')  # for test
+    services.core.print('locked')  # for test
     #os.system('rundll32.exe user32.dll,LockWorkStation')
