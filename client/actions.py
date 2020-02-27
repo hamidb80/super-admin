@@ -8,6 +8,8 @@ from utils import Password, Messages
 def connect(data):
     services.core.print(Messages.connected)
 
+def reconnect(data=None):
+    pass
 
 def disconnect(data):
     services.core.print(Messages.disconnected)

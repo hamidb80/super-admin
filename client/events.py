@@ -1,5 +1,5 @@
 from typing import Callable, List
-from actions import connect, disconnect, auth, hello
+from actions import connect, disconnect, auth, hello, reconnect
 
 
 
@@ -14,6 +14,7 @@ class Event:
 
 event_list: List[Event] = [
     Event('connect', connect),
+    Event('reconnect', reconnect),
     Event('hello', hello),
     Event('disconnect', disconnect),
     Event('auth', auth),

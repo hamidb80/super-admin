@@ -27,6 +27,9 @@ class StateManager:
             self.is_connected = True
             services.tunnel.push_event('connect')
 
+        else:
+            services.tunnel.push_event('reconnect')
+
         self.fails = 0
 
 
