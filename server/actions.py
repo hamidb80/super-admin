@@ -1,13 +1,13 @@
 from driver.models import Client, Message
 from utils import Password_Manager
+‌from provider import services
 # user connection notification
 
 
 def connect(client: Client, data=None):
     print(f'user {client.host_name} connected')
 
-    new_msg = Message(client.host_name, 'hello', 'hello')
-    new_msg.save()
+    services.tunnel.send(target=client.host_name, event='hello', data= 'hello')
 
 
 # get notifications using this function
