@@ -18,7 +18,7 @@ services.tunnel = tunnel
 if __name__ == "__main__":
 
     # set server's password
-    # set_serverpass()
+    set_serverpass()
 
     # start database
     init_database()

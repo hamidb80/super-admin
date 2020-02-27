@@ -7,6 +7,10 @@ from provider import services
 from flask import Flask, request, Response
 
 
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
 class Tunnel:
     event_map: Dict[str, Callable]
 
@@ -40,4 +44,4 @@ class Tunnel:
     def run(self):
         self.init_routes()
         self.app.run(host=self.connection[0],
-                     port=self.connection[1], debug=True)
+                     port=self.connection[1], debug=False)
