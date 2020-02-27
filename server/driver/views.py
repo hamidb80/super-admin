@@ -1,5 +1,6 @@
 from typing import Callable, List, Dict
 from flask import request
+from datetime import datetime
 
 from .models import Client, Message
 from provider import services
@@ -17,9 +18,20 @@ def get_client(host_name) -> Client:
 
 def messages_view(host_name: str):
     client = get_client(host_name)
-    client.update_connection_time()
 
-    services.tunnel.push_event('connect', client, None)
+    now = datetime.now()
+    delta_time = now - client.last_connection
+
+    event = None
+
+    if delta_time.seconds >= client.offline_after:
+        event = 'connect'
+    else:
+        event = 'reconnect'
+
+    services.tunnel.push_event(event, client)
+
+    client.update_connection_time()
 
     def check(m: Message):
         return m._id > client.last_seen_message_id and m.is_target(client)

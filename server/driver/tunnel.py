@@ -20,7 +20,7 @@ class Tunnel:
         # func (client:Client): ...
         self.event_map[event] = func
 
-    def push_event(self, event: str, client: Client, data: Any):
+    def push_event(self, event: str, client: Client, data: Any= None):
         return self.event_map[event](client, data)
 
     def send(self, event: str, target: str, data: Any):
