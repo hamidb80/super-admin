@@ -7,10 +7,12 @@ from tasks import task_list
 from provider import states, services
 from functions import get_host_name
 from driver.core import Core
+from driver.argumentparser import get_args
 from driver.tunnel import Tunnel
 
-
 if __name__ == "__main__":
+    args = get_args()
+
     services.core = Core(debug_mode=False)
     states.host_name = get_host_name()
 

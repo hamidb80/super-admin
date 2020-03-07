@@ -1,5 +1,8 @@
+from typing import Any
 from enum import Enum
 import os
+
+from .filewatcher import FileWatcher
 
 
 class os_list(Enum):
@@ -8,21 +11,41 @@ class os_list(Enum):
 
 
 class Core:
-    def __init__(self, debug_mode: bool = False):
+    def __init__(self, debug_mode: bool, print_file_path: str = '', input_file_path: str = ''):
         self.debug_mode = debug_mode
-        self.os = os_list.linux
+        self.os = 'linux'
 
-    def print(self, *args, **kwargs):
+        self.input_file_path = input_file_path
+        self.print_file_path = print_file_path
+
+    def print(self, content: Any):
+        content = str(content)
 
         if self.debug_mode:
-            pass
+            with open(self.print_file_path, 'w+') as file:
+                file.write(content)
 
         else:
-            return print(*args, **kwargs)
+            return print(content)
 
     def input(self, text: str):
+        res = None
+
         if self.debug_mode:
-            pass
+
+            inp_file: FileWatcher
+
+            def pass_into_res(content) -> bool:
+                global res, inp_file
+                res = content
+
+                # to stop
+                return False
+
+            inp_file = FileWatcher(self.input_file_path, pass_into_res)
+            inp_file.run(pass_into_res, wait=True)
+
+            return res
 
         else:
             return input(text)
