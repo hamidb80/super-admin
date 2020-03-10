@@ -74,12 +74,12 @@ def main_input():
 
             # services.core.print connection status
             if 'status' in inp:
-
                 if states.is_connected:
                     services.core.print(Messages.yconnected)
 
                 else:
                     services.core.print(Messages.ynotconnected)
+
 
             # authenticate
             elif 'auth' in inp:

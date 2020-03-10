@@ -9,7 +9,7 @@ class Task:
         self.func = func
 
     def run(self):
-        thread = Thread(target=self.func, daemon=True)
+        thread = Thread(target=self.func)
         thread.start()
 
 

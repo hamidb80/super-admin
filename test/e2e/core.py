@@ -18,11 +18,9 @@ class FileWatcher:
     def run(self, wait=False):
         self.is_active = True
 
-        print(wait)
-
         if wait is False:
-            thread = Thread(target=self._go, daemon=True)
-            thread.run()
+            thread = Thread(target=self._go)
+            thread.start()
 
         else:
             self._go()
@@ -59,6 +57,7 @@ class FileWriter:
             file.truncate(0)
 
 
+
 class os_list(Enum):
     linux = 'linux'
     windows = 'win'
@@ -78,7 +77,6 @@ class Core:
 
         if self.debug_mode:
             self.print_obj.append(content)
-            self.print_obj.ap
 
         else:
             return print(content)
@@ -96,7 +94,7 @@ class Core:
                 return False
 
             inp_file = FileWatcher(self.input_file_path, pass_into_res)
-            inp_file.run(pass_into_res, wait=True)
+            inp_file.run(wait=True)
 
             return res
 

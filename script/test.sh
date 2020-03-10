@@ -1,1 +1,1 @@
-python3 -m pytest test/
+python3.8 -m pytest test/

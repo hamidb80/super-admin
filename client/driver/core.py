@@ -4,7 +4,19 @@ from threading import Thread
 import os
 
 
-class FileWatcher:
+class File:
+    file_path: str
+
+    def clear(self):
+        with open(self.file_path, 'w') as file:
+            file.truncate(0)
+
+    def get_content(self) -> str:
+        with open(self.file_path) as file:
+            return file.read()
+
+
+class FileWatcher(File):
     def __init__(self, file_path: str, action_func: Callable):
         self.is_active = False
 
@@ -22,11 +34,9 @@ class FileWatcher:
 
         else:
             thread = Thread(target=self._go)
-            thread.run()
+            thread.start()
 
-    def get_content(self) -> str:
-        with open(self.file_path) as file:
-            return file.read()
+        pass
 
     def _go(self):
         last_content = self.get_content()
@@ -43,17 +53,18 @@ class FileWatcher:
                     self.kill()
 
 
-class FileWriter:
+class FileWriter(File):
     def __init__(self, file_path: str):
         self.file_path = file_path
 
-    def append(self, content):
-        with open(self.file_path, 'w+') as file:
-            file.write(f'{content}')
+        self.clear()
 
-    def clear(self):
+    def append(self, content):
+        last_content = self.get_content()
+        print(last_content)
+
         with open(self.file_path, 'w+') as file:
-            file.truncate(0)
+            file.write(f'{last_content}{content}')
 
 
 class os_list(Enum):
@@ -69,11 +80,19 @@ class Core:
         self.res = ''
 
         if debug_mode:
-            self.input_file_path = input_file_path
+            self.input_obj = FileWatcher(input_file_path, self.pass_into_res)
             self.print_obj = FileWriter(output_file_path)
 
+            self.input_obj.clear()
+            self.print_obj.clear()
+
+    def pass_into_res(self, content) -> bool:
+        self.res = content
+        # to stop
+        return False
+
     def print(self, content: Any):
-        content = str(content)
+        content = f'{content}\n'
 
         if self.debug_mode:
             self.print_obj.append(content)
@@ -84,19 +103,12 @@ class Core:
     def input(self, text: str):
         if self.debug_mode:
 
-            def pass_into_res(content) -> bool:
-                self.res = content
+            self.print(text)
 
-                # to stop
-                return False
-
-            inp_file = FileWatcher(self.input_file_path, pass_into_res)
-            inp_file.run(wait=True)
+            self.input_obj.run(wait=True)
 
             res = self.res
             self.res = ''
-
-            print(res)
 
             return res
 
