@@ -1,6 +1,7 @@
 from typing import Any, Callable
 from enum import Enum
 from threading import Thread
+from time import sleep
 import os
 
 
@@ -17,12 +18,14 @@ class FileWatcher:
     def run(self, wait=False):
         self.is_active = True
 
-        if wait:
-            self._go()
+        print(wait)
+
+        if wait is False:
+            thread = Thread(target=self._go, daemon=True)
+            thread.run()
 
         else:
-            thread = Thread(target=self._go)
-            thread.run()
+            self._go()
 
     def get_content(self) -> str:
         with open(self.file_path) as file:
@@ -66,8 +69,6 @@ class Core:
         self.debug_mode = debug_mode
         self.os = 'linux'
 
-        self.res = ''
-
         if debug_mode:
             self.input_file_path = input_file_path
             self.print_obj = FileWriter(output_file_path)
@@ -77,26 +78,25 @@ class Core:
 
         if self.debug_mode:
             self.print_obj.append(content)
+            self.print_obj.ap
 
         else:
             return print(content)
 
     def input(self, text: str):
+        res = None
+
         if self.debug_mode:
 
             def pass_into_res(content) -> bool:
-                self.res = content
+                global res
+                res = content
 
                 # to stop
                 return False
 
             inp_file = FileWatcher(self.input_file_path, pass_into_res)
-            inp_file.run(wait=True)
-
-            res = self.res
-            self.res = ''
-
-            print(res)
+            inp_file.run(pass_into_res, wait=True)
 
             return res
 

@@ -13,7 +13,11 @@ from driver.tunnel import Tunnel
 if __name__ == "__main__":
     args = get_args()
 
-    services.core = Core(debug_mode=False)
+    services.core = Core(
+        debug_mode=args['test'],
+        input_file_path=args['input_file'],
+        output_file_path=args['output_file']
+    )
     states.host_name = get_host_name()
 
     services.tunnel = Tunnel(ADDR, PORT)
