@@ -1,4 +1,8 @@
 MOLLASADRA client >
 
+Connected
+You are connected
+MOLLASADRA client >
+
 MOLLASADRA client >
 

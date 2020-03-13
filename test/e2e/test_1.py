@@ -1,11 +1,16 @@
 from subprocess import Popen, PIPE
 from threading import Thread
 from time import sleep
+from typing import Dict
 import os
 
 from core import FileWriter, FileWatcher
 
-proc: Popen = None
+procs: Dict[str, Popen] = dict(
+    client=None,
+    server=None,
+)
+
 outs = []
 os.chdir('../../')
 
@@ -13,41 +18,43 @@ INP_FILE_PATH = 'test/inp.txt'
 OUT_FILE_PATH = 'test/out.txt'
 
 
-def tracker():
+def start_app():
     global proc
 
-    proc = Popen(
-        [f'python3.8 client/app.py -t --inpf="{INP_FILE_PATH}" --outf="{OUT_FILE_PATH}"'],
+    procs['server'] = Popen(
+        [f'python3.8 server/app.py -p=123'],
         shell=True,
-         stdout=PIPE, stdin=PIPE, stderr=PIPE
+        stdout=PIPE, stdin=PIPE, stderr=PIPE
     )
 
-    proc.wait()
-    # proc.kill()
+    procs['client'] = Popen(
+        [f'python3.8 client/app.py -t --inpf="{INP_FILE_PATH}" --outf="{OUT_FILE_PATH}"'],
+        shell=True,
+        stdout=PIPE, stdin=PIPE, stderr=PIPE
+    )
+
+
+def close_app():
+    app: Popen
+    for app in procs.values():
+        app.kill()
 
 
 def main():
-    Thread(target=tracker).start()
-
-    sleep(0.2)
-    print('1')
     out_file = FileWatcher(OUT_FILE_PATH, lambda z: False)
-
-    print('2')
-    sleep(0.1)
     inp = FileWriter(INP_FILE_PATH)
 
-    print('3')
-    sleep(0.1)
+    start_app()
+
+    sleep(0.5)
     inp.append('status')
 
-    print('4')
     sleep(1)
     out = out_file.get_content()
 
-    assert 'not connected' in out
+    assert 'not connected' not in out
 
-    proc.kill()
+    close_app()
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 from driver.models import Client, Message
 from driver.tunnel import Tunnel
+from driver.argumentparser import get_args
 from typing import Any, List
 
 from config import ADDR, PORT
@@ -15,10 +16,15 @@ from jobs import job_list
 
 tunnel = Tunnel(ADDR, PORT)
 services.tunnel = tunnel
-if __name__ == "__main__":
 
+
+def main():
     # set server's password
-    set_serverpass()
+    args = get_args()
+
+    password = args['password']
+    set_serverpass(password)
+
 
     # start database
     init_database()
@@ -32,3 +38,7 @@ if __name__ == "__main__":
 
     # start server
     tunnel.run()
+
+
+if __name__ == "__main__":
+    main()

@@ -10,11 +10,12 @@ class Password:
             'sha256', passwd.encode('utf-8'), self.salt, 1000000)
 
 
-def set_serverpass():
+def set_serverpass(passwd: str = None):
 
-    passwd = input('Enter Server Password \n')
+    if passwd is None:
+        passwd = input('Enter Server Password \n')
+
     Password_Manager.password_list['serverpass'] = Password(passwd)
-    del passwd
 
 
 class Password_Manager:
