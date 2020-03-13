@@ -100,14 +100,3 @@ class Core:
 
         else:
             return input(text)
-
-    # windows, linux
-    def clear_console(self):
-        command = None
-        if self.os is os_list.linux:
-            command = 'clear'
-
-        elif self.os is os_list.windows:
-            command = 'cls'
-
-        os.system(command)
