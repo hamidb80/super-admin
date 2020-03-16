@@ -6,6 +6,9 @@ from provider import states, services
 
 from .interface import TunnelIC
 
+from logging import Logger, INFO
+
+logger = Logger('Tunnel', level=INFO)
 
 class Tunnel(TunnelIC):
     event_map: Dict[str, Callable] = dict()
@@ -17,6 +20,7 @@ class Tunnel(TunnelIC):
 
     # add event
     def on(self, event: str, func: Callable):
+        logger.info(f'Event: {event}')
         self.event_map[event] = func
 
     def push_event(self, event: str, data: Any = None):
@@ -35,8 +39,7 @@ class Tunnel(TunnelIC):
             data=data
         )
 
-        # TODO: change it to POST request
-        return requests.get(f'{self.address}/commit/', params=params)
+        return requests.post(f'{self.address}/commit/{states.host_name}', json=params)
 
     def get_messages(self):
         try:

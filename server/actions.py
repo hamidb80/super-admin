@@ -31,8 +31,10 @@ def notification(client: Client, data):
 
         pass_to_send = Password_Manager.password_list['serverpass']
 
-        client.send('auth', {'key': pass_to_send.key,
-                             'salt': pass_to_send.salt})
+        print(pass_to_send.key)
+
+        client.send('auth', {'key': str(pass_to_send.key),
+                             'salt': str(pass_to_send.salt)})
 
 
 # execute command from client with admin privillages

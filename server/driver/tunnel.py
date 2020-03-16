@@ -28,7 +28,7 @@ class Tunnel:
         return self.event_map[event](client, data)
 
     def send(self, event: str, target: str, data: Any):
-        new_msg = Message(target, event, data)
+        new_msg = Message(target= target, event=event, data=data)
         new_msg.save()
 
     def init_routes(self):
@@ -37,8 +37,8 @@ class Tunnel:
                               methods=['GET'],
                               view_func=messages_view)
 
-        self.app.add_url_rule('/commit/',
-                              methods=["POST", "GET"],
+        self.app.add_url_rule('/commit/<host_name>',
+                              methods=["POST"],
                               view_func=commit_view)
 
     def run(self):

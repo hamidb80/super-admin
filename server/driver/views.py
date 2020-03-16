@@ -49,19 +49,28 @@ def messages_view(host_name: str):
     return dict(messages=res)
 
 
-def commit_view():
-    client_name = request.args.get('client_name')
-    client = get_client(client_name)
+def commit_view(host_name: str):
+    client = get_client(host_name)
+
+    data = request.get_json()
+    """{
+        'event': str,
+        'data': any
+    }"""
 
     if client:
-        event = request.args.get('event')
-        data = request.args.get('data')
+        event = data.get('event')
+        event_data = data.get('data')
 
         if event is None:
             return 'event should be defined'
 
         else:
-            services.tunnel.push_event(event, client, data)
+            services.tunnel.push_event(
+                event=event,
+                client=client,
+                data=event_data
+            )
             return 'message committed'
 
     else:

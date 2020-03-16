@@ -2,7 +2,6 @@ from typing import Callable, List
 from actions import connect, disconnect, auth, hello, reconnect
 
 
-
 class Event:
     name: str
     function: Callable

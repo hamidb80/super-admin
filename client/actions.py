@@ -2,14 +2,23 @@ from time import sleep
 import os
 from provider import states, services
 from utils import Password, Messages
+import re
+
+from typing import Dict
+
+def str_2_byte(string)-> bytes:
+    bslash = '\\'[0]
+    return string[2:-1].replace(bslash*2,bslash).encode()
 
 
 # functions dependant on events
 def connect(data):
     services.core.print(Messages.connected)
 
+
 def reconnect(data=None):
     pass
+
 
 def disconnect(data):
     services.core.print(Messages.disconnected)
@@ -30,12 +39,16 @@ def auth(data):
         while tries < 3:
             # services.core.input server's password
             enteredpass = services.core.input(Messages.enter_pass)
+            data:Dict[str, str]
 
+            byted_salt = str_2_byte( data['salt'])
+
+            byted_key = str_2_byte(data['key'])
             # make a new hash using the entered password and salt
-            testhash = Password(enteredpass, data['salt'])
+            testhash = Password(enteredpass, byted_salt)
 
             # compare the new hash and the server's hash
-            if (testhash.key == data['key']):
+            if (testhash.key == byted_key):
 
                 # give admin rights
                 services.core.print(Messages.admin_granted)
@@ -43,6 +56,7 @@ def auth(data):
                 services.tunnel.send('notification', {'type': 'hasaccess'})
 
                 states.is_admin = True
+
                 return client_input()
 
             # if entered password was wrong
@@ -79,7 +93,6 @@ def main_input():
 
                 else:
                     services.core.print(Messages.ynotconnected)
-
 
             # authenticate
             elif 'auth' in inp:

@@ -48,8 +48,7 @@ class Client(Model):
         return delta_time.seconds < self.offline_after
 
     def send(self, event: str, data=None):
-        new_msg = Message(target=self.host_name, event=event, data=data)
-        services.tunnel.send(new_msg)
+        services.tunnel.send(target=self.host_name, event=event, data=data)
 
 
 class Message(Model):
@@ -80,6 +79,9 @@ class Message(Model):
 
     def jsonify(self):
         return dict(event=self.event, data=self.data)
+
+    def __repr__(self):
+        return f"event {self.event} for {self.target}"
 
     def is_target(self, client: Client):
         if self.target == 'admin':
