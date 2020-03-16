@@ -1,15 +1,10 @@
 from subprocess import Popen, PIPE
-from threading import Thread
 from time import sleep
 from typing import Dict
 import os
 
-from core import FileWriter, FileWatcher
-
-cwd = '/home/hamid/Documents/programming/python/super-admin/app/test/'
-INP_FILE_PATH = cwd + 'inp.txt'
-OUT_FILE_PATH = cwd + 'out.txt'
-
+from client.driver.core import FileWatcher, FileWriter
+from config import OUT_FILE_PATH, INP_FILE_PATH
 
 
 class E2ETestBase:
@@ -43,7 +38,11 @@ class E2ETestBase:
     def test_send_hello(self):
         pass
 
-    def tear_down(self):
+    def teardown_class(self):
+        # remove files after tests
+        os.remove(INP_FILE_PATH)
+        os.remove(OUT_FILE_PATH)
+
         app: Popen
         for app in self.procs.values():
             app.kill()
