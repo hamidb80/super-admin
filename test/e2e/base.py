@@ -27,17 +27,6 @@ class E2ETestBase:
         self.out_file = FileWatcher(OUT_FILE_PATH, lambda z: False)
         self.inp = FileWriter(INP_FILE_PATH)
 
-    def test_connect(self):
-        self.inp.append('status')
-
-        sleep(0.6)
-        out = self.out_file.get_content()
-
-        assert 'not connected' not in out
-
-    def test_send_hello(self):
-        pass
-
     def teardown_class(self):
         # remove files after tests
         os.remove(INP_FILE_PATH)
