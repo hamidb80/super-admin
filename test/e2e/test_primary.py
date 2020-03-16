@@ -1,15 +1,19 @@
 from base import E2ETestBase
 from time import sleep
 
+
 class Test(E2ETestBase):
     def test_connect(self):
-        self.inp.append('status')
+        self.push_input('status')
 
-        sleep(1)
-        out = self.out_file.get_content().lower()
+        sleep(0.5)
+        out = self.new_outs.lower()
 
         assert 'not connected' not in out and\
             'connected' in out
 
-    def test_send_hello(self):
-        pass
+    def test_new1(self):
+        self.push_input('auth')
+
+        sleep(0.3)
+        assert '?' in self.new_outs

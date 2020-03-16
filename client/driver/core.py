@@ -17,6 +17,13 @@ class File:
 
 
 class FileWatcher(File):
+    """
+    sample action file
+
+    def action(file:File, content) -> continue_watching? : bool:
+        return True
+    """
+
     def __init__(self, file_path: str, action_func: Callable):
         self.is_active = False
 
@@ -47,9 +54,9 @@ class FileWatcher(File):
             if content != last_content:
 
                 last_content = content
-                res = self.action_func(content)
+                res = self.action_func(self, content)
 
-                if res is False:
+                if res is not True:
                     self.kill()
 
 
@@ -86,7 +93,7 @@ class Core:
             self.input_obj.clear()
             self.print_obj.clear()
 
-    def pass_into_res(self, content) -> bool:
+    def pass_into_res(self, file, content) -> bool:
         self.res = content
         # to stop
         return False
