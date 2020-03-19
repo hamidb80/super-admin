@@ -5,9 +5,9 @@ from .views import commit_view, messages_view
 from provider import services
 
 from flask import Flask, request, Response
-
-
 import logging
+
+
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 

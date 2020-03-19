@@ -6,9 +6,11 @@ import re
 
 from typing import Dict
 
-def str_2_byte(string)-> bytes:
-    bslash = '\\'[0]
-    return string[2:-1].replace(bslash*2,bslash).encode()
+
+def str_2_byte(byte_string) -> bytes:
+    res =  byte_string[2:-1].encode('iso-8859-15')
+
+    return res.replace('\\\\', '\\')
 
 
 # functions dependant on events
@@ -39,11 +41,11 @@ def auth(data):
         while tries < 3:
             # services.core.input server's password
             enteredpass = services.core.input(Messages.enter_pass)
-            data:Dict[str, str]
+            data: Dict[str, str]
 
-            byted_salt = str_2_byte( data['salt'])
-
+            byted_salt = str_2_byte(data['salt'])
             byted_key = str_2_byte(data['key'])
+
             # make a new hash using the entered password and salt
             testhash = Password(enteredpass, byted_salt)
 
