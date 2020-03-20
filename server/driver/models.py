@@ -42,7 +42,7 @@ class Client(Model):
     def update_connection_time(self):
         self.last_connection = datetime.now()
 
-    def is_online(self):
+    def is_online(self) -> bool:
         delta_time: timedelta = datetime.now() - self.last_connection
         return delta_time.seconds <= CLIENT_IS_OFFLINE_AFTER
 

@@ -1,5 +1,5 @@
 from typing import Any, List
-from logging import Logger, INFO
+from logging import Logger, INFO, getLogger, StreamHandler
 
 from config import ADDR, PORT
 from driver.models import Client, Message
@@ -15,11 +15,17 @@ from provider import services
 from jobs import job_list
 
 
-# init necessary
+# init tunnel
 tunnel = Tunnel(ADDR, PORT)
 services.tunnel = tunnel
 
-logger = Logger(__name__, INFO)
+# init logger
+logger = Logger(__name__)
+handler = StreamHandler()
+
+handler.setLevel(INFO)
+logger.addHandler(handler)
+
 services.logger = logger
 
 

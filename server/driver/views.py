@@ -19,15 +19,12 @@ def get_client(host_name) -> Client:
 def messages_view(host_name: str):
     client = get_client(host_name)
 
-    now = datetime.now()
-    delta_time = now - client.last_connection
-
     event = None
 
-    if delta_time.seconds >= client.offline_after:
-        event = 'connect'
-    else:
+    if client.is_online():
         event = 'reconnect'
+    else:
+        event = 'connect'
 
     services.tunnel.push_event(event, client)
 

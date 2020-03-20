@@ -30,7 +30,6 @@ def notification(client: Client, data):
 
     # asking for authentication notification
     elif data['type'] == 'askforauth':
-
         services.logger.info(
             f'User {client.host_name} asked for running code in server, sending hashed password and salt'
         )

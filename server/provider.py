@@ -5,12 +5,12 @@ from logging import Logger
 
 
 class ServicesClass:
-    tunnel: TunnelIC
+    tunnel: TunnelIC = None
 
-    clientDB: InMemoryDB
-    messageDB: InMemoryDB
+    clientDB: InMemoryDB = None
+    messageDB: InMemoryDB = None
 
-    logger: Logger
+    logger: Logger = None
 
 
 services = ServicesClass()
