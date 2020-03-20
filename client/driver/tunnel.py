@@ -1,18 +1,20 @@
 from typing import Callable, Any, Dict
-import requests
+from logging import Logger, INFO
 from threading import Thread
 from time import sleep
+
+import requests
+
 from provider import states, services
-
 from .interface import TunnelIC
+from config import UPDATE_DELAY
 
-from logging import Logger, INFO
 
 logger = Logger('Tunnel', level=INFO)
 
+
 class Tunnel(TunnelIC):
     event_map: Dict[str, Callable] = dict()
-    delay = 0.1
 
     def __init__(self, addr, port):
         self.address = f'http://{addr}:{port}'
@@ -34,6 +36,15 @@ class Tunnel(TunnelIC):
             services.core.print(f'the {event} event is not defined')
 
     def send(self, event: str, data: Any = None):
+        """
+        POST /messages/{states.host_name}/
+        data should be json like this:
+        {
+            'event': <event_name:str>,
+            'data': <data_object:any>
+        }
+        """
+
         params = dict(
             event=event,
             data=data
@@ -42,6 +53,20 @@ class Tunnel(TunnelIC):
         return requests.post(f'{self.address}/commit/{states.host_name}', json=params)
 
     def get_messages(self):
+        """
+        GET /messages/{states.host_name}/
+        the received data structure:
+        {
+            'messages':[
+                {
+                    'event': <event_name:str>
+                    'data': <data_object:any>
+                },
+                ...
+            ]
+        }
+        """
+
         try:
             res = requests.get(
                 f'{self.address}/messages/{states.host_name}/', timeout=0.3)
@@ -68,5 +93,5 @@ class Tunnel(TunnelIC):
 
     def _go(self):
         while self.is_active:
-            sleep(self.delay)
+            sleep(UPDATE_DELAY)
             self.get_messages()

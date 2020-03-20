@@ -1,2 +1,4 @@
 ADDR, PORT = 'localhost', 2020
+UPDATE_DELAY = 0.1
+
 APP_NAME= "MOLLASADRA client"

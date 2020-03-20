@@ -1,9 +1,10 @@
+from typing import Any, List
+from logging import Logger, INFO
+
+from config import ADDR, PORT
 from driver.models import Client, Message
 from driver.tunnel import Tunnel
 from driver.argumentparser import get_args
-from typing import Any, List
-
-from config import ADDR, PORT
 
 from events import event_list
 from database import init_database
@@ -14,8 +15,12 @@ from provider import services
 from jobs import job_list
 
 
+# init necessary
 tunnel = Tunnel(ADDR, PORT)
 services.tunnel = tunnel
+
+logger = Logger(__name__, INFO)
+services.logger = logger
 
 
 def main():
@@ -24,7 +29,6 @@ def main():
 
     password = args['password']
     set_serverpass(password)
-
 
     # start database
     init_database()

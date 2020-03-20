@@ -1,9 +1,10 @@
-from provider import services
-from .db import InMemoryDB
-from typing import Any
 from abc import abstractproperty, abstractmethod
-
+from typing import Any
 from datetime import datetime, timedelta
+
+from provider import services
+from config import CLIENT_IS_OFFLINE_AFTER, MESSAGE_EXPIRE_TIME
+from .db import InMemoryDB
 
 
 class Model:
@@ -25,14 +26,12 @@ class Model:
 
 
 class Client(Model):
-    # per secs
-    offline_after = 1
-    last_seen_message_id = -1
 
     def __init__(self, host_name: str):
         self.host_name = host_name
         self.is_admin = False
         self.last_connection = datetime.now()
+        self.last_seen_message_id = -1
 
         super().__init__()
 
@@ -45,16 +44,13 @@ class Client(Model):
 
     def is_online(self):
         delta_time: timedelta = datetime.now() - self.last_connection
-        return delta_time.seconds < self.offline_after
+        return delta_time.seconds <= CLIENT_IS_OFFLINE_AFTER
 
     def send(self, event: str, data=None):
         services.tunnel.send(target=self.host_name, event=event, data=data)
 
 
 class Message(Model):
-    # per secs
-    expaired_after = 5
-
     def __init__(self, target: str, event: str, data: Any):
         self.target = target  # can be 'all', 'admin, '<client.host_name>
         self.event = event
@@ -70,7 +66,7 @@ class Message(Model):
     def is_expaired(self) -> bool:
         delta_time: timedelta = datetime.now() - self.time
 
-        return delta_time.seconds > self.expaired_after
+        return delta_time.seconds > MESSAGE_EXPIRE_TIME
 
     def save(self):
         self.time = datetime.now()
