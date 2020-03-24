@@ -2,6 +2,7 @@ from typing import Callable, List
 from threading import Thread
 from time import sleep
 
+from config import APP_START_DELAY
 from functions import clean_messageDB, check_for_disconnection
 
 
@@ -27,6 +28,6 @@ class Job:
 
 
 job_list: List[Job] = [
-    Job(clean_messageDB, 10, 2),
-    Job(self.check_for_disconnection, 1, 1)
+    Job(clean_messageDB, 10, APP_START_DELAY),
+    Job(check_for_disconnection, 1, APP_START_DELAY)
 ]

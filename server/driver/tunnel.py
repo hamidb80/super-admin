@@ -26,12 +26,11 @@ class Tunnel:
 
     def on(self, event: str, func: Callable):
         # func (client:Client): ...
-        func_list: list = self.event_map[event]
-        func_list.append(func)
+        self.event_map[event].append(func)
 
     def push_event(self, event: str, client: Client, data: Any = None):
         for func in self.event_map[event]:
-            func[event](client, data)
+            func(client, data)
 
     def send(self, event: str, target: str, data: Any):
         new_msg = Message(target=target, event=event, data=data)

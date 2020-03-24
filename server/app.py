@@ -14,6 +14,10 @@ from utils import set_serverpass
 from provider import services
 from jobs import job_list
 
+"""
+init app servies, and start server
+"""
+
 
 # init tunnel
 tunnel = Tunnel(ADDR, PORT)
