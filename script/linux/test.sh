@@ -1,1 +1,3 @@
-python3.8 -m pytest test/
+source "./script/linux/config.sh"
+
+$pythonalias -m pytest test/

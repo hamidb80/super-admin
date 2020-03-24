@@ -1,1 +1,1 @@
-$pythonalias = python3.8
+pythonalias="python3.8"
