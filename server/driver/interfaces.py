@@ -16,7 +16,7 @@ class TunnelIC:
         pass
 
     @abstractmethod
-    def push_event(self, event: str, client, data: Any):
+    def push_event(self, event: str, client, data: Any = None):
         pass
 
     @abstractmethod

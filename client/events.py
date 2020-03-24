@@ -3,6 +3,10 @@ from actions import connect, disconnect, auth, hello, reconnect
 
 
 class Event:
+    """
+    event class just for increase readability
+    """
+
     name: str
     function: Callable
 
@@ -12,9 +16,12 @@ class Event:
 
 
 event_list: List[Event] = [
+    # pre-defined events
     Event('connect', connect),
     Event('reconnect', reconnect),
-    Event('hello', hello),
     Event('disconnect', disconnect),
+
+    # user defined events
+    Event('hello', hello),
     Event('auth', auth),
 ]

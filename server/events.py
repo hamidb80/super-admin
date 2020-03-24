@@ -1,7 +1,10 @@
 from typing import Callable, List
 
-from actions import connect, executefromclient, notification, reconnect
-
+from functions import remove_from_offline_clients
+from actions import (
+    connect, reconnect, disconnect,
+    executefromclient, notification,
+)
 
 
 class Event:
@@ -14,8 +17,15 @@ class Event:
 
 
 event_list: List[Event] = [
+
+
+    # pre-defined events
+    Event('connect', remove_from_offline_clients),
     Event('connect', connect),
     Event('reconnect', reconnect),
+    Event('disconnect', disconnect),
+
+    # user defined events
     Event('notification', notification),
     Event('execute', executefromclient),
 ]

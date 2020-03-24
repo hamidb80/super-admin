@@ -1,34 +1,40 @@
 from typing import Callable, List, Dict, Any
+import logging
+
+from collections import defaultdict
+
+from flask import Flask, request, Response
 
 from .models import Client, Message
 from .views import commit_view, messages_view
 from provider import services
-
-from flask import Flask, request, Response
-import logging
+from jobs import Job
 
 
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
+
 class Tunnel:
-    event_map: Dict[str, Callable]
+    event_map: Dict[str, List[Callable]]
 
     def __init__(self, addr, port):
-        self.event_map = dict()
+        self.event_map = defaultdict(list)
 
         self.connection = (addr, port)
         self.app = Flask('tunnel')
 
     def on(self, event: str, func: Callable):
         # func (client:Client): ...
-        self.event_map[event] = func
+        func_list: list = self.event_map[event]
+        func_list.append(func)
 
-    def push_event(self, event: str, client: Client, data: Any= None):
-        return self.event_map[event](client, data)
+    def push_event(self, event: str, client: Client, data: Any = None):
+        for func in self.event_map[event]:
+            func[event](client, data)
 
     def send(self, event: str, target: str, data: Any):
-        new_msg = Message(target= target, event=event, data=data)
+        new_msg = Message(target=target, event=event, data=data)
         new_msg.save()
 
     def init_routes(self):

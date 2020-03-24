@@ -5,6 +5,12 @@ from logging import Logger
 
 
 class ServicesClass:
+    """
+    the aim of creating this class is:
+    - prevent circular dependency
+    - access all necessary objects by import one object
+    """
+
     tunnel: TunnelIC = None
 
     clientDB: InMemoryDB = None

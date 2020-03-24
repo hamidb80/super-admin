@@ -13,6 +13,11 @@ def reconnect(client: Client, data=None):
     pass
 
 
+def disconnect(client: Client, data=None):
+    services.logger.info(f'{client.host_name} disconnected')
+
+
+
 # get notifications using this function
 def notification(client: Client, data):
 
