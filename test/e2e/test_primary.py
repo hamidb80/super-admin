@@ -6,7 +6,7 @@ class Test(E2ETestBase):
     def test_connect(self):
         self.push_input('status')
 
-        sleep(0.5)
+        sleep(1)
         out = self.new_outs.lower()
 
         assert 'not connected' not in out and\

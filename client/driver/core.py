@@ -7,6 +7,10 @@ import os
 class File:
     file_path: str
 
+    def __init__(self, file_path: str):
+        self.file_path = file_path
+        self.clear()
+
     def clear(self):
         with open(self.file_path, 'w') as file:
             file.truncate(0)
@@ -14,6 +18,12 @@ class File:
     def get_content(self) -> str:
         with open(self.file_path) as file:
             return file.read()
+
+    def append(self, content):
+        last_content = self.get_content()
+
+        with open(self.file_path, 'w+') as file:
+            file.write(f'{last_content}{content}')
 
 
 class FileWatcher(File):
@@ -24,28 +34,25 @@ class FileWatcher(File):
         return True
     """
 
-    def __init__(self, file_path: str, action_func: Callable):
-        self.is_active = False
+    def __init__(self, file_path: str):
+        super().__init__(file_path)
 
-        self.action_func = action_func
-        self.file_path = file_path
+        self.is_active = False
 
     def kill(self):
         self.is_active = False
 
-    def run(self, wait=False):
+    def run(self, action_func=lambda *_: True, wait=False):
         self.is_active = True
 
         if wait:
-            self._go()
+            self._go(action_func)
 
         else:
-            thread = Thread(target=self._go)
+            thread = Thread(target=self._go, args=[action_func])
             thread.start()
 
-        pass
-
-    def _go(self):
+    def _go(self, action_func: Callable):
         last_content = self.get_content()
 
         while self.is_active:
@@ -54,24 +61,10 @@ class FileWatcher(File):
             if content != last_content:
 
                 last_content = content
-                res = self.action_func(self, content)
+                res = action_func(self, content)
 
                 if res is not True:
                     self.kill()
-
-
-class FileWriter(File):
-    def __init__(self, file_path: str):
-        self.file_path = file_path
-
-        self.clear()
-
-    def append(self, content):
-        last_content = self.get_content()
-        print(last_content)
-
-        with open(self.file_path, 'w+') as file:
-            file.write(f'{last_content}{content}')
 
 
 class os_list(Enum):
@@ -87,8 +80,8 @@ class Core:
         self.res = ''
 
         if debug_mode:
-            self.input_obj = FileWatcher(input_file_path, self.pass_into_res)
-            self.print_obj = FileWriter(output_file_path)
+            self.input_obj = FileWatcher(input_file_path)
+            self.print_obj = File(output_file_path)
 
             self.input_obj.clear()
             self.print_obj.clear()
@@ -112,7 +105,7 @@ class Core:
 
             self.print(text)
 
-            self.input_obj.run(wait=True)
+            self.input_obj.run(self.pass_into_res, wait=True)
 
             res = self.res
             self.res = ''

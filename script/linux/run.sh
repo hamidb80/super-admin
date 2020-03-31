@@ -1,9 +1,12 @@
+#!/bin/bash
+
 source "./script/linux/config.sh"
 
-# TODO: add optional open new termianl or run direectly
-# TODO: add optional run server or client or both
+source "./script/linux/server.sh"
+source "./script/linux/client.sh"
+
 
 # open server
-gnome-terminal -e "$pythonalias server/app.py"
+gnome-terminal -e "$server_start"
 # open client
-gnome-terminal -e "$pythonalias client/app.py"
+gnome-terminal -e "$client_start"

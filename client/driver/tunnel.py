@@ -77,7 +77,12 @@ class Tunnel(TunnelIC):
         else:
             states.connected_successfully()
 
-        message_list = res.json()['messages']
+        try:
+            message_list = res.json()['messages']
+
+        except:
+            services.core.print('the response from server is not valid')
+            return
 
         for message in message_list:
             self.push_event(message['event'], message['data'])

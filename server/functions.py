@@ -18,7 +18,7 @@ offline_clients = set()
 def is_offline(c: Client):
     return c.is_online() is False
 
-def remove_from_offline_clients(client:Client):
+def remove_from_offline_clients(client:Client, data=None):
     global offline_clients
 
     if client.host_name in offline_clients:
