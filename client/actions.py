@@ -2,7 +2,7 @@ from time import sleep
 import os
 from provider import states, services
 from utils import Messages
-from events.core import events_names as ev
+from events.event import events_names as ev
 
 from typing import Dict
 

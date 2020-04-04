@@ -1,7 +1,7 @@
 from typing import List
 
 from actions import connect, disconnect, auth, hello, reconnect
-from .core import Event, events_names as ev
+from .event import Event, events_names as ev
 
 event_list: List[Event] = [
     # pre-defined events

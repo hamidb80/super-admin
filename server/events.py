@@ -3,7 +3,7 @@ from typing import Callable, List
 from functions import remove_from_offline_clients
 from actions import (
     connect, reconnect, disconnect,
-    executefromclient,
+    executefromclient,auth
 )
 
 
@@ -27,4 +27,5 @@ event_list: List[Event] = [
 
     # user defined events
     Event('execute', executefromclient),
+    Event('auth', auth),
 ]

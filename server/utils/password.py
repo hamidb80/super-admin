@@ -1,13 +1,11 @@
 import hashlib
 import os
 
-
-def hash_password(passwd:str):
-    return hashlib.md5(passwd.encode())
-
-
 password = None
 
+def hash_password(passwd:str):
+    return passwd
+    # return hashlib.md5(passwd.encode('utf-8'))
 
 def set_serverpass(passwd: str = None):
     global password

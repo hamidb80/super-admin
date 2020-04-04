@@ -21,7 +21,7 @@ def disconnect(client: Client, data=None):
 def auth(client: Client, entered_pass: str):
     res = check_password(entered_pass)
 
-    if check_password(entered_pass):
+    if res:
         client.is_admin = True
 
     client.send('auth_check', res)
