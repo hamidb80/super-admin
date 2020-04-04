@@ -1,17 +1,10 @@
 from time import sleep
 import os
 from provider import states, services
-from utils import Password, Messages
-import re
+from utils import Messages
+from events.core import events_names as ev
 
 from typing import Dict
-
-
-def str_2_byte(byte_string) -> bytes:
-    res =  byte_string[2:-1].encode('iso-8859-15')
-
-    return res.replace('\\\\', '\\')
-
 
 # functions dependant on events
 def connect(data):
@@ -30,7 +23,7 @@ def hello(data=None):
     services.core.print('server said hello')
 
 
-def auth(data):
+def auth():
     # check if user has admin privillages
     if states.is_admin:
         services.core.print(Messages.you_are_admin)
@@ -40,23 +33,15 @@ def auth(data):
 
         while tries < 3:
             # services.core.input server's password
-            enteredpass = services.core.input(Messages.enter_pass)
-            data: Dict[str, str]
+            entered_pass = services.core.input(Messages.enter_pass)
 
-            byted_salt = str_2_byte(data['salt'])
-            byted_key = str_2_byte(data['key'])
+            services.tunnel.send(ev.auth.value, entered_pass)
 
-            # make a new hash using the entered password and salt
-            testhash = Password(enteredpass, byted_salt)
+            # admin permission
+            admin_per = services.tunnel.wait_for(ev.auth_check.value)
 
-            # compare the new hash and the server's hash
-            if (testhash.key == byted_key):
-
-                # give admin rights
+            if admin_per:
                 services.core.print(Messages.admin_granted)
-
-                services.tunnel.send('notification', {'type': 'hasaccess'})
-
                 states.is_admin = True
 
                 return client_input()
@@ -64,19 +49,9 @@ def auth(data):
             # if entered password was wrong
             else:
                 services.core.print(Messages.wrong_pass)
-
-                # send wrong password notification to server
-                services.tunnel.send('notification', {'type': 'wrongpass'})
-
                 tries += 1
 
         return main_input()
-
-
-# ask for authentication from server
-def ask_auth():
-    # send asked for authentication notification to server
-    services.tunnel.send('notification', {'type': 'askforauth'})
 
 
 # client services.core.input
@@ -98,7 +73,7 @@ def main_input():
 
             # authenticate
             elif 'auth' in inp:
-                return ask_auth()
+                return auth()
 
             elif 'clear' in inp:
                 services.core.clear_console()

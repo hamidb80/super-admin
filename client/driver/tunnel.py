@@ -16,6 +16,9 @@ logger = Logger('Tunnel', level=INFO)
 class Tunnel(TunnelIC):
     event_map: Dict[str, Callable] = dict()
 
+    # {'event': <data>}
+    queue_events: Dict[str, Any] = dict()
+
     def __init__(self, addr, port):
         self.address = f'http://{addr}:{port}'
         self.is_active = False
@@ -26,6 +29,11 @@ class Tunnel(TunnelIC):
         self.event_map[event] = func
 
     def push_event(self, event: str, data: Any = None):
+        # pass the queues
+        if event in self.queue_events:
+            self.queue_events[event] = data
+
+        # run event functions
         func = self.event_map.get(event)
 
         if func:
@@ -34,6 +42,20 @@ class Tunnel(TunnelIC):
 
         else:
             services.core.print(f'the {event} event is not defined')
+
+    """
+    return the data of the <event> after passing
+    """
+    def wait_for(self, event: str) -> Any:
+        self.queue_events[event] = None
+
+        while self.queue_events[event] is None:
+            sleep(UPDATE_DELAY)
+
+        data = self.queue_events[event]
+        del self.queue_events[event]
+
+        return data
 
     def send(self, event: str, data: Any = None):
         """

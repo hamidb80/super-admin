@@ -17,6 +17,11 @@ class TunnelIC:
         pass
 
     @abstractmethod
+    def wait_for(self, event: str) -> Any:
+        pass
+
+
+    @abstractmethod
     def send(self, event: str, data: Any = None):
         pass
 
