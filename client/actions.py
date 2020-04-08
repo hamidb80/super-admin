@@ -79,9 +79,6 @@ def main_input():
                 services.core.print(Messages.command_not_defined)
 
 
-# admin functions
-
-
 # run commands in client
 def client_input():
     while True:

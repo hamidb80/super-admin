@@ -20,7 +20,8 @@ class Core:
             self.init_testing()
 
     def init_testing(self):
-        pass
+        # TODO: connect to redis server ...
+        redis_port = os.getenv('redis_port')
 
     def print(self, content: Any):
         content = f'{content}\n'
