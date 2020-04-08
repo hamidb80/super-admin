@@ -38,3 +38,5 @@ class Messages:
     exiting_admin = 'Exiting admin mode.'
 
     enter_pass = "Enter server's password >\n"
+
+    command_not_defined = 'the commnad not defined'

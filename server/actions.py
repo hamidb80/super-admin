@@ -26,11 +26,10 @@ def auth(client: Client, entered_pass: str):
 
     client.send('auth_check', res)
 
+
 # execute command from client with admin privillages
-
-
-def executefromclient(client: Client, data):
-    services.logger.info(f'User {client.host_name} executed command: {data}')
+def execute_from_client(client: Client, data):
+    services.logger.info(f'User {client.host_name} executed command: "{data}"')
 
     try:
         exec(data)

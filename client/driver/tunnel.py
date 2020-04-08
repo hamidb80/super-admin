@@ -1,5 +1,4 @@
 from typing import Callable, Any, Dict
-from logging import Logger, INFO
 from threading import Thread
 from time import sleep
 
@@ -8,10 +7,6 @@ import requests
 from provider import states, services
 from .interface import TunnelIC
 from config import UPDATE_DELAY
-
-
-logger = Logger('Tunnel', level=INFO)
-
 
 class Tunnel(TunnelIC):
     event_map: Dict[str, Callable] = dict()
@@ -25,32 +20,41 @@ class Tunnel(TunnelIC):
 
     # add event
     def on(self, event: str, func: Callable):
-        logger.info(f'Event: {event}')
         self.event_map[event] = func
 
     def push_event(self, event: str, data: Any = None):
+        event_used = False
+        func = self.event_map.get(event)
+
         # pass the queues
         if event in self.queue_events:
+            event_used = True
             self.queue_events[event] = data
 
         # run event functions
-        func = self.event_map.get(event)
-
         if func:
+            event_used = True
             thread = Thread(target=lambda: func(data))
             thread.run()
 
-        else:
+        if event_used is False:
             services.core.print(f'the {event} event is not defined')
 
     """
     return the data of the <event> after passing
     """
-    def wait_for(self, event: str) -> Any:
-        self.queue_events[event] = None
 
-        while self.queue_events[event] is None:
+    def wait_for(self, event: str, time_limit: float = 0) -> Any:
+        passed_secs = 0
+
+        self.queue_events[event] = NotImplemented
+
+        while self.queue_events[event] is NotImplemented:
+            if passed_secs != 0 and passed_secs >= time_limit:
+                break
+
             sleep(UPDATE_DELAY)
+            passed_secs += UPDATE_DELAY
 
         data = self.queue_events[event]
         del self.queue_events[event]
@@ -89,6 +93,7 @@ class Tunnel(TunnelIC):
         }
         """
 
+        # get the new messages
         try:
             res = requests.get(
                 f'{self.address}/messages/{states.host_name}/', timeout=0.3)
@@ -99,6 +104,7 @@ class Tunnel(TunnelIC):
         else:
             states.connected_successfully()
 
+        # parse messages
         try:
             message_list = res.json()['messages']
 

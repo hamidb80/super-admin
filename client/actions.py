@@ -75,6 +75,9 @@ def main_input():
             elif 'clear' in inp:
                 services.core.clear_console()
 
+            else:
+                services.core.print(Messages.command_not_defined)
+
 
 # admin functions
 
