@@ -1,41 +1,38 @@
 from typing import Any, Callable
-from enum import Enum
 from threading import Thread
 import os
 
 # TODO: do debug mode with Redis
 
-class os_list(Enum):
+class os_list:
     linux = 'linux'
     windows = 'win'
 
 
 class Core:
-    def __init__(self, debug_mode: bool):
-        self.debug_mode = debug_mode
-        self.os = 'linux'
+    def __init__(self, test_mode: bool):
+        self.test_mode = test_mode
 
-        self.res = ''
+        # FIXME: get os name from os module
+        self.os = os_list.linux
 
-        if debug_mode:
-            pass
+        if test_mode:
+            self.init_testing()
 
-    def pass_into_res(self, file, content) -> bool:
-        self.res = content
-        # to stop
-        return False
+    def init_testing(self):
+        pass
 
     def print(self, content: Any):
         content = f'{content}\n'
 
-        if self.debug_mode:
+        if self.test_mode:
             pass
 
         else:
             return print(content)
 
     def input(self, text: str):
-        if self.debug_mode:
+        if self.test_mode:
 
             self.print(text)
 
@@ -55,3 +52,12 @@ class Core:
             command = 'cls'
 
         os.system(command)
+
+    def lock(self):
+        if self.test_mode:
+            self.print('locked')
+
+        else:
+            #os.system('rundll32.exe user32.dll,LockWorkStation')
+            pass
+

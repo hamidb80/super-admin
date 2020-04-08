@@ -1,12 +1,23 @@
 from config import APP_NAME
 
+
+class events_names:
+    connect = 'connect'
+    reconnect = 'reconnect'
+    disconnect = 'disconnect'
+
+    hello = 'hello'
+    auth = 'auth'
+
+    auth_check = 'auth_check'
+
 class Messages:
 
     connected = 'Connected'
 
     disconnected = 'disconnected'
 
-    eror = 'Err'
+    error = 'Err'
 
     you_are_admin = 'You already have admin privillages!'
 

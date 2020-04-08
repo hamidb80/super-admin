@@ -3,7 +3,7 @@ from threading import Thread
 
 from config import ADDR, PORT
 
-from events.event_list import event_list
+from events import event_list
 from tasks import task_list
 
 from provider import states, services
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     args = get_args()
 
     services.core = Core(
-        debug_mode=args['test'],
+        test_mode=args['test'],
     )
     states.host_name = get_host_name()
 

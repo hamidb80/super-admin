@@ -1,12 +1,9 @@
-from time import sleep
 import os
 from provider import states, services
-from utils import Messages
-from events.event import events_names as ev
+from utils import Messages, events_names as ev
 
 from typing import Dict
 
-# functions dependant on events
 def connect(data):
     services.core.print(Messages.connected)
 
@@ -35,10 +32,10 @@ def auth():
             # services.core.input server's password
             entered_pass = services.core.input(Messages.enter_pass)
 
-            services.tunnel.send(ev.auth.value, entered_pass)
+            services.tunnel.send(ev.auth, entered_pass)
 
             # admin permission
-            admin_per = services.tunnel.wait_for(ev.auth_check.value)
+            admin_per = services.tunnel.wait_for(ev.auth_check)
 
             if admin_per:
                 services.core.print(Messages.admin_granted)
@@ -78,9 +75,6 @@ def main_input():
             elif 'clear' in inp:
                 services.core.clear_console()
 
-            sleep(0.5)
-        sleep(2)
-
 
 # admin functions
 
@@ -94,7 +88,6 @@ def client_input():
 
             if inp == 'exit':
                 services.core.print(Messages.exiting_admin)
-                sleep(0.5)
                 services.core.clear_console()
                 states.is_admin = False
 
@@ -125,15 +118,12 @@ def client_input():
 
                         # send command to server
                         services.tunnel.send('execute', inp)
-
-                    sleep(1)
             else:
                 try:
                     exec(inp)
                 except:
-                    services.core.print(Messages.eror)
+                    services.core.print(Messages.error)
 
 
 def lock():
-    services.core.print('locked')  # for test
-    #os.system('rundll32.exe user32.dll,LockWorkStation')
+    services.core.lock()

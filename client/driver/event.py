@@ -1,5 +1,4 @@
 from typing import Callable
-from enum import Enum
 
 class Event:
     """
@@ -12,14 +11,3 @@ class Event:
     def __init__(self, name: str, func: Callable):
         self.name = name
         self.func = func
-
-
-class events_names(Enum):
-    connect = 'connect'
-    reconnect = 'reconnect'
-    disconnect = 'disconnect'
-
-    hello = 'hello'
-    auth = 'auth'
-
-    auth_check = 'auth_check'
