@@ -17,7 +17,8 @@ if __name__ == "__main__":
     args = get_args()
 
     services.core = Core(
-        test_mode=args['test'],
+        # test_mode=args['test'],
+        test_mode=True,
     )
     states.host_name = get_host_name()
 

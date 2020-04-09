@@ -13,7 +13,6 @@ from utils.password import set_serverpass
 
 from provider import services
 from jobs import job_list
-import os
 
 """
 init app servies, and start server
