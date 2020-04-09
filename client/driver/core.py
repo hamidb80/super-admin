@@ -42,30 +42,41 @@ class Core:
         self.pipeline = self.redis_server.pubsub()
         self.pipeline.subscribe(CLIENT_INPUT_CHANNEL)
 
+        t = Thread(target=self.get_redis_messages)
+        t.start()
+
     def get_redis_messages(self):
         while True:
             ms = self.pipeline.get_message()
+
+            if ms is None:
+                continue
 
             if ms['type'] == 'message':
                 # byte code to str (channel is byte-like str as default)
                 ms_channel = ms['channel'].decode('utf-8')
 
                 if ms_channel in self.ms_queue:
-                    self.ms_queue[ms_channel] = ms['data']
+                    self.ms_queue[ms_channel] = ms['data'].decode('utf-8')
 
             sleep(UPDATE_DELAY)
 
     def wait_for_redis_channel(self, channel_name: str, time_limit: float = 0):
         spent_time = 0
 
-        while channel_name not in self.ms_queue:
+        self.ms_queue[channel_name] = None
+
+        while self.ms_queue[channel_name] is None:
             if time_limit and spent_time >= time_limit:
                 raise TimeoutError
 
             sleep(UPDATE_DELAY)
             spent_time += UPDATE_DELAY
 
-        return self.ms_queue[channel_name]
+        res = self.ms_queue[channel_name]
+        del self.ms_queue[channel_name]
+
+        return res
 
     def print(self, content: Any):
         content = f'{content}\n'
@@ -80,7 +91,8 @@ class Core:
         if self.test_mode:
             self.print(text)
 
-            return self.wait_for_redis_channel(CLIENT_INPUT_CHANNEL)
+            res = self.wait_for_redis_channel(CLIENT_INPUT_CHANNEL)
+            return res
 
         else:
             return input(text)

@@ -58,10 +58,10 @@ class E2ETestBase:
             sleep(UPDATE_DELAY)
 
     def get_outputs(self) -> str:
-        outs = self.outs
-        self.outs = []
+        outs = ''.join(self.outs)
+        self.outs.clear()
 
-        return ''.join(outs)
+        return outs
 
     def push_input(self, text: str):
         self.redis_server.publish(CLIENT_INPUT_CHANNEL, text)
