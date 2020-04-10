@@ -13,5 +13,7 @@ then
         server_start="${server_start} -p=$2"
     fi
 
-    $server_start
+    # run the commnad & return the process id
+    $server_start & PID=$!
+    echo "$PID" >> "client-pid.txt"
 fi

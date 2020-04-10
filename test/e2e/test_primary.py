@@ -12,7 +12,7 @@ class Test(E2ETestBase):
         assert 'not connected' not in out and\
             'connected' in out
 
-    def test_new1(self):
+    def test_auth(self):
         self.push_input('auth')
 
         sleep(1)
