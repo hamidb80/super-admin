@@ -6,12 +6,13 @@ client_start="${pythonalias} client/app.py"
 
 if [[ $1 == "-r" ]]
 then
-    if [[ $2 != "-t" ]]
+    if [[ $2 == "-t" ]]
     then
         client_start="${client_start} -t"
+        # run the commnad & return the process id
+        $client_start & PID=$!
+        echo "$PID" >> "server-pid.txt"
     fi
 
-    # run the commnad & return the process id
-    $client_start & PID=$!
-    echo "$PID" >> "server-pid.txt"
+    $client_start
 fi
