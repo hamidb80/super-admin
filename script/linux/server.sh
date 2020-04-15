@@ -3,23 +3,20 @@ source "./script/linux/config.sh"
 
 server_start="${pythonalias} server/app.py"
 
-# this-file.sh -r? -t? <password>?
+# this-file.sh -r? / -t? <password>?
 
-if [[ $1 == "-r" ]]
-then
+if [[ $1 == "-r" ]]; then
+    $server_start
 
-    if [[ $3 != "" ]]
-    then
+# test mode
+elif [[ $1 == "-t" ]]; then
+    # check for password
+    if [[ $2 != "" ]]; then
         server_start="${server_start} -p=$2"
     fi
 
-    if [[ $2 == "-t" ]]
-    then
-        # run the commnad & return the process id
-        $server_start & PID=$!
-        echo "$PID" >> "client-pid.txt"
-    fi
-
-
-    $server_start
+    # run the commnad & return the process id
+    $server_start &
+    PID=$!
+    echo "$PID" >>"client-pid.txt"
 fi

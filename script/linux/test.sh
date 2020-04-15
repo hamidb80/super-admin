@@ -4,10 +4,11 @@ source "./script/linux/config.sh"
 source "./script/linux/server.sh"
 source "./script/linux/client.sh"
 
+# init message queue server
 redis-server redis.conf &
 
-bash ./script/linux/server.sh -r -t 123 &
-bash ./script/linux/client.sh -r -t &
+bash ./script/linux/server.sh -t 123 &
+bash ./script/linux/client.sh -t &
 
 sleep 1s
 

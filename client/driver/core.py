@@ -53,11 +53,12 @@ class Core:
                 continue
 
             if ms['type'] == 'message':
-                # byte code to str (channel is byte-like str as default)
+                # byte code to str (channel & data is byte-like str as default)
                 ms_channel = ms['channel'].decode('utf-8')
+                ms_data = ms['data'].decode('utf-8')
 
                 if ms_channel in self.ms_queue:
-                    self.ms_queue[ms_channel] = ms['data'].decode('utf-8')
+                    self.ms_queue[ms_channel] = ms_data
 
             sleep(UPDATE_DELAY)
 
