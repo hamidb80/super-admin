@@ -4,6 +4,7 @@ from utils import Messages, events_names as ev
 
 from typing import Dict
 
+
 def connect(data):
     services.core.print(Messages.connected)
 
@@ -41,27 +42,26 @@ def auth():
                 services.core.print(Messages.admin_granted)
                 states.is_admin = True
 
-                return client_input()
+                return admin_input()
 
             # if entered password was wrong
             else:
                 services.core.print(Messages.wrong_pass)
                 tries += 1
 
-        return main_input()
+        return client_input()
 
 
 # client services.core.input
-def main_input():
+def client_input():
 
     while True:
-
         while states.is_admin is False:
 
             inp = services.core.input(Messages.app_name)
 
             # services.core.print connection status
-            if 'status' in inp:
+            if 'status' == inp:
                 if states.is_connected:
                     services.core.print(Messages.yconnected)
 
@@ -69,60 +69,53 @@ def main_input():
                     services.core.print(Messages.ynotconnected)
 
             # authenticate
-            elif 'auth' in inp:
+            elif 'auth' == inp:
                 return auth()
 
-            elif 'clear' in inp:
+            elif 'clear' == inp:
                 services.core.clear_console()
+
+            elif '' == inp:
+                pass
+
+            elif 'help' == inp:
+                services.core.print(Messages.client_help)
 
             else:
                 services.core.print(Messages.command_not_defined)
 
 
 # run commands in client
-def client_input():
+def admin_input():
     while True:
         while states.is_admin:
             # get user services.core.input
-            inp = services.core.input('Client >\n')
+            inp = services.core.input('Client>')
 
-            if inp == 'exit':
+            if 'exit' in inp:
                 services.core.print(Messages.exiting_admin)
                 services.core.clear_console()
                 states.is_admin = False
 
-                return main_input()
+                return client_input()
 
             elif inp == '':
                 pass
 
-            elif inp == 'clear':
+            elif 'clear' == inp:
                 services.core.clear_console()
 
-            # check if user wants to run code in server
-            elif inp == 'servermode':
-                services.core.print(Messages.running_in_server)
+            elif 'help' == inp:
+                services.core.print(Messages.admin_help)
 
-                while True:
-                    inp = services.core.input('Server >\n')
+            elif inp[-2:] == '-s':
+                services.tunnel.send(ev.execute, inp[:-2])
+                res = services.tunnel.wait_for(ev.execute_result)
 
-                    if inp == 'exit':
-                        services.core.print(Messages.running_in_client)
-                        break
+                services.core.print(f'result: {res}')
 
-                    elif inp == '':
-                        pass
-
-                    else:
-                        services.core.print(f'Sending command {inp} to server')
-
-                        # send command to server
-                        services.tunnel.send('execute', inp)
             else:
-                try:
-                    exec(inp)
-                except:
-                    services.core.print(Messages.error)
+                services.core.print(Messages.command_not_defined)
 
 
 def lock():

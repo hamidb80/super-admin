@@ -11,6 +11,10 @@ class events_names:
 
     auth_check = 'auth_check'
 
+    execute = 'execute'
+    execute_result = 'execute_result'
+
+
 class Messages:
 
     connected = 'Connected'
@@ -40,3 +44,17 @@ class Messages:
     enter_pass = "Enter server's password >\n"
 
     command_not_defined = 'the commnad not defined'
+
+    client_help = (
+        "command list:\n"
+        "- status    : check status (online or offline)\n"
+        "- clear     : clear console\n"
+        "- auth      : authenticate user\n"
+    )
+
+    admin_help = (
+        "command list:\n"
+        "- exit           : exit from admin mode\n"
+        "- clear     : clear console\n"
+        "- {command}  -s  : execute commands in server\n"
+    )

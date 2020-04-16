@@ -39,6 +39,10 @@ class Client(Model):
     def db(self) -> InMemoryDB:
         return services.clientDB
 
+    def __repr__(self):
+        # <client: host_name| state>
+        return f"<client: {self.host_name}| {'on' if self.is_online() else 'off'}line>"
+
     def update_connection_time(self):
         self.last_connection = datetime.now()
 
@@ -77,7 +81,7 @@ class Message(Model):
         return dict(event=self.event, data=self.data)
 
     def __repr__(self):
-        return f"event {self.event} for {self.target}"
+        return f"<event {self.event} for {self.target}>"
 
     def is_target(self, client: Client):
         if self.target == 'admin':

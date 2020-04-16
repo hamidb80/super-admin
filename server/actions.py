@@ -1,7 +1,8 @@
 from driver.models import Client, Message
 from provider import services
 
-from utils.password import check_password
+from tools.password import check_password
+from utils import event_names as ev
 
 
 def connect(client: Client, data=None):
@@ -32,6 +33,7 @@ def execute_from_client(client: Client, data):
     services.logger.info(f'User {client.host_name} executed command: "{data}"')
 
     try:
-        exec(data)
+        res = str(eval(data))
+        client.send(ev.execute_result, res)
     except:
         services.logger.info('Err')

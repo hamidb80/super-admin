@@ -1,7 +1,7 @@
 from typing import Callable, List
 from threading import Thread
 
-from actions import main_input
+from actions import client_input
 
 
 class Task:
@@ -14,5 +14,5 @@ class Task:
 
 
 task_list: List[Task] = [
-    Task(main_input),
+    Task(client_input),
 ]

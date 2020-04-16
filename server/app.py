@@ -9,7 +9,7 @@ from driver.argumentparser import get_args
 from events import event_list
 from database import init_database
 from provider import services
-from utils.password import set_serverpass
+from tools.password import set_serverpass
 
 from provider import services
 from jobs import job_list

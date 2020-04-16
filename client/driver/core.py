@@ -100,6 +100,9 @@ class Core:
 
     # windows, linux
     def clear_console(self):
+        if self.test_mode:
+            return
+
         command = None
         if self.os is os_list.linux:
             command = 'clear'

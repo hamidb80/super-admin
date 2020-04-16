@@ -15,6 +15,7 @@ CLIENT_OUTPUT_CHANNEL = 'client-output'
 class E2ETestBase:
     outs = []
     isActive = True
+    APP_DELAY = UPDATE_DELAY * 2
 
     @classmethod
     def setup_class(self):
@@ -62,6 +63,9 @@ class E2ETestBase:
         self.outs.clear()
 
         return outs
+
+    def wait(self):
+        sleep(self.APP_DELAY)
 
     def push_input(self, text: str):
         self.redis_server.publish(CLIENT_INPUT_CHANNEL, text)
