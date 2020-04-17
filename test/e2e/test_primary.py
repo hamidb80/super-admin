@@ -17,7 +17,7 @@ class Test(E2ETestBase):
 
     def test_auth(self):
         correct_pass = os.getenv('server_pass')
-        wrong_pass = '46164'
+        wrong_pass = correct_pass + '#'
 
         # check auth commnad works
 
@@ -50,3 +50,20 @@ class Test(E2ETestBase):
         out = self.get_outputs().lower()
 
         assert 'command' in out
+
+    def test_run_command_in_server(self):
+        correct_pass = os.getenv('server_pass')
+
+        # authenticate as an admin
+        self.push_input('auth')
+        self.wait()
+
+        self.push_input(correct_pass)
+        self.wait()
+
+        # run code in the server
+        self.push_input('7 * 7 -s')
+        self.wait()
+
+        assert '49' in self.get_outputs().lower()
+

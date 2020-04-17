@@ -65,7 +65,7 @@ class E2ETestBase:
         return outs
 
     def wait(self):
-        sleep(self.APP_DELAY)
+        sleep(self.APP_DELAY * 2)
 
     def push_input(self, text: str):
         self.redis_server.publish(CLIENT_INPUT_CHANNEL, text)

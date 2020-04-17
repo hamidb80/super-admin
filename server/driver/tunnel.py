@@ -1,6 +1,5 @@
 from typing import Callable, List, Dict, Any
 import logging
-
 from collections import defaultdict
 
 from flask import Flask, request, Response

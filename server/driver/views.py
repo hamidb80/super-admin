@@ -30,10 +30,11 @@ def messages_view(host_name: str):
 
     client.update_connection_time()
 
-    def check(m: Message):
+    def check_unread_messages(m: Message):
         return m._id > client.last_seen_message_id and m.is_target(client)
 
-    res: List[Message] = services.messageDB.filter(func_checker=check)
+    res: List[Message]
+    res = services.messageDB.filter(func_checker=check_unread_messages)
 
     # update client last_seen_message_id
     if len(res):
@@ -60,7 +61,7 @@ def commit_view(host_name: str):
         event_data = data.get('data')
 
         if event is None:
-            return 'event should be defined'
+            return 'event is not defined'
 
         else:
             services.tunnel.push_event(
