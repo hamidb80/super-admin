@@ -66,4 +66,3 @@ class Test(E2ETestBase):
         self.wait()
 
         assert '49' in self.get_outputs().lower()
-

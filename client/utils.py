@@ -6,7 +6,6 @@ class events_names:
     reconnect = 'reconnect'
     disconnect = 'disconnect'
 
-    hello = 'hello'
     auth = 'auth'
 
     auth_check = 'auth_check'
