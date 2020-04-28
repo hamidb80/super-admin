@@ -20,10 +20,22 @@ class E2ETestBase:
     @classmethod
     def setup_class(self):
         self.init_testing()
+        self.init()
 
     @classmethod
     def teardown_class(self):
         self.isActive = False
+        self.destroy()
+
+    # abstract method
+    @classmethod
+    def init(self):
+        pass
+
+    # abstract method
+    @classmethod
+    def destroy(self):
+        pass
 
     @classmethod
     def init_testing(self):

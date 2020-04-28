@@ -1,6 +1,7 @@
 from driver.models import Client, Message
 from provider import services
 
+from functions import get_online_users
 from tools.password import check_password
 from utils import event_names as ev
 
@@ -28,7 +29,14 @@ def auth(client: Client, entered_pass: str):
     client.send('auth_check', res)
 
 
+def online_users(client: Client, data=None):
+    res = get_online_users()
+
+    client.send(ev.online_users_res, res)
+
 # execute command from client with admin privillages
+
+
 def execute_from_client(client: Client, data):
     services.logger.info(f'User {client.host_name} executed command: "{data}"')
 

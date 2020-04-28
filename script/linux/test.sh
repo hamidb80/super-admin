@@ -17,7 +17,8 @@ sleep 1s
 SERVER_PID=$(cat "server-pid.txt")
 CLIENT_PID=$(cat "client-pid.txt")
 
-$pythonalias -m pytest test/
+# $1: test specific folder or file
+$pythonalias -m pytest test/$1
 
 kill -9 $SERVER_PID
 kill -9 $CLIENT_PID

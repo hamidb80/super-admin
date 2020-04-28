@@ -3,3 +3,5 @@
 **/.pytest_cache
 .vscode
 .mypy_cache
+client-pid.txt
+server-pid.txt

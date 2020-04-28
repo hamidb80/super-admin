@@ -8,3 +8,6 @@ class event_names:
 
     # user defined events
     auth = 'auth'
+
+    online_users = 'online_users'
+    online_users_res = 'online_users_result'

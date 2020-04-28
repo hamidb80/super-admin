@@ -73,7 +73,8 @@ def client_input():
             elif 'help' == inp:
                 print(Messages.client_help)
 
-            else: common_commands(inp)
+            else:
+                common_commands(inp)
 
 
 # run commands in client
@@ -92,6 +93,20 @@ def admin_input():
 
             elif 'help' == inp:
                 print(Messages.admin_help)
+
+            elif 'online-users' in inp:
+                services.tunnel.send(ev.online_users)
+
+                """
+                result : [
+                    "<client-x>",
+                    ...
+                ]
+                """
+
+                res = services.tunnel.wait_for(ev.online_users_res)
+
+                print(res)
 
             elif inp[-2:] == '-s':
                 services.tunnel.send(ev.execute, inp[:-2])

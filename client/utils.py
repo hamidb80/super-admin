@@ -13,6 +13,10 @@ class events_names:
     execute = 'execute'
     execute_result = 'execute_result'
 
+    online_users = 'online_users'
+    online_users_res = 'online_users_result'
+
+
 
 class Messages:
 
@@ -54,6 +58,7 @@ class Messages:
     admin_help = (
         "command list:\n"
         "- exit           : exit from admin mode\n"
-        "- clear     : clear console\n"
+        "- clear          : clear console\n"
         "- {command}  -s  : execute commands in server\n"
+        "online-users     : show the online users\n"
     )

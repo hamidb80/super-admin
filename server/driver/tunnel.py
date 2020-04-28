@@ -29,7 +29,10 @@ class Tunnel:
 
     def push_event(self, event: str, client: Client, data: Any = None):
         for func in self.event_map[event]:
-            func(client, data)
+            try:
+                func(client, data)
+            except:
+                services.logger.error(f"error running event {event}")
 
     def send(self, event: str, target: str, data: Any):
         new_msg = Message(target=target, event=event, data=data)
