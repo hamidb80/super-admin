@@ -4,6 +4,7 @@ from datetime import datetime
 
 from .models import Client, Message
 from provider import services
+from utils import event_names as ev
 
 
 def get_client(host_name) -> Client:
@@ -22,9 +23,9 @@ def messages_view(host_name: str):
     event = None
 
     if client.is_online():
-        event = 'reconnect'
+        event = ev.reconnect
     else:
-        event = 'connect'
+        event = ev.connect
 
     services.tunnel.push_event(event, client)
 

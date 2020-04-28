@@ -1,6 +1,8 @@
 from provider import services
 from driver.models import Message, Client
 
+from utils import event_names as ev
+
 # -----------------------------------------------------------
 
 def check_is_expaired(m: Message):
@@ -32,5 +34,5 @@ def check_for_disconnection():
     client: Client
     for client in clients:
         if client.host_name not in offline_clients:
-            services.tunnel.push_event('disconnect', client)
+            services.tunnel.push_event(ev.disconnect, client)
             offline_clients.add(client.host_name)

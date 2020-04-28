@@ -2,6 +2,7 @@ from typing import Any, Callable, Dict
 from threading import Thread
 from time import sleep
 import os
+import sys
 
 from redis import Redis
 from redis.client import PubSub
@@ -27,11 +28,22 @@ class Core:
     def __init__(self, test_mode: bool):
         self.test_mode = test_mode
 
-        # FIXME: get os name from os module
-        self.os = os_list.linux
+        self.os = self.detect_os()
 
         if test_mode:
             self.init_testing()
+
+    def detect_os(self) -> str:
+        os_name = sys.platform
+
+        if os_list.linux in os_name:
+            return os_list.linux
+
+        elif os_list.windows in os_name:
+            return os_list.linux
+
+        else:
+            raise Exception("The os is not supported")
 
     def init_testing(self):
         # redis server configuration
@@ -42,16 +54,25 @@ class Core:
         self.pipeline = self.redis_server.pubsub()
         self.pipeline.subscribe(CLIENT_INPUT_CHANNEL)
 
-        t = Thread(target=self.get_redis_messages)
-        t.start()
+        # redis message queue thread
+        thread = Thread(target=self.get_redis_messages)
+        thread.start()
 
     def get_redis_messages(self):
         while True:
+            # message as ms
             ms = self.pipeline.get_message()
 
             if ms is None:
                 continue
 
+            """
+            redis message: {
+                'type': str,
+                'channel: byte-str,
+                'data': byte-str,
+            }
+            """
             if ms['type'] == 'message':
                 # byte code to str (channel & data is byte-like str as default)
                 ms_channel = ms['channel'].decode('utf-8')

@@ -2,9 +2,10 @@ from typing import Dict
 import os
 
 from provider import states, services
-from utils import Messages, events_names as ev
-
 from monkey_patch import print, input
+
+from utils import Messages, events_names as ev
+from functions import common_commands
 
 
 def connect(data):
@@ -30,7 +31,6 @@ def auth():
         while tries < 3:
             # input server's password
             entered_pass = input(Messages.enter_pass)
-
             services.tunnel.send(ev.auth, entered_pass)
 
             # admin permission
@@ -70,17 +70,10 @@ def client_input():
             elif 'auth' == inp:
                 return auth()
 
-            elif 'clear' == inp:
-                services.core.clear_console()
-
-            elif '' == inp:
-                pass
-
             elif 'help' == inp:
                 print(Messages.client_help)
 
-            else:
-                print(Messages.command_not_defined)
+            else: common_commands(inp)
 
 
 # run commands in client
@@ -97,12 +90,6 @@ def admin_input():
 
                 return client_input()
 
-            elif inp == '':
-                pass
-
-            elif 'clear' == inp:
-                services.core.clear_console()
-
             elif 'help' == inp:
                 print(Messages.admin_help)
 
@@ -113,4 +100,4 @@ def admin_input():
                 print(f'result: {res}')
 
             else:
-                print(Messages.command_not_defined)
+                common_commands(inp)
