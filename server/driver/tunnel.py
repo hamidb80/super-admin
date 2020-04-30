@@ -8,6 +8,7 @@ from .models import Client, Message
 from .views import commit_view, messages_view
 from provider import services
 from jobs import Job
+from utils import event_names as ev
 
 
 log = logging.getLogger('werkzeug')
@@ -31,8 +32,9 @@ class Tunnel:
         for func in self.event_map[event]:
             try:
                 func(client, data)
-            except:
+            except Exception as e:
                 services.logger.error(f"error running event {event}")
+                services.logger.error(e)
 
     def send(self, event: str, target: str, data: Any):
         new_msg = Message(target=target, event=event, data=data)

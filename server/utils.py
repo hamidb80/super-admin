@@ -11,3 +11,5 @@ class event_names:
 
     online_users = 'online_users'
     online_users_res = 'online_users_result'
+
+    send_event = 'send_event'

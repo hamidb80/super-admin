@@ -34,6 +34,20 @@ def online_users(client: Client, data=None):
 
     client.send(ev.online_users_res, res)
 
+
+def send_event(client: Client, data: dict):
+    """
+    data: {
+        'event': str
+        'data': str
+    }
+    """
+
+    services.tunnel.send(
+        event=data['event'], data=data['data'],
+        target='all',
+    )
+
 # execute command from client with admin privillages
 
 

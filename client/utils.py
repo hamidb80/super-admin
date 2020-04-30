@@ -6,6 +6,8 @@ class events_names:
     reconnect = 'reconnect'
     disconnect = 'disconnect'
 
+    hello = 'hello'
+
     auth = 'auth'
 
     auth_check = 'auth_check'
@@ -16,6 +18,8 @@ class events_names:
     online_users = 'online_users'
     online_users_res = 'online_users_result'
 
+    send_event = 'send_event'
+
 
 
 class Messages:
@@ -25,6 +29,8 @@ class Messages:
     disconnected = 'disconnected'
 
     error = 'Err'
+
+    hello_from_server = 'server said hello'
 
     you_are_admin = 'You already have admin privillages!'
 
@@ -57,8 +63,10 @@ class Messages:
 
     admin_help = (
         "command list:\n"
-        "- exit           : exit from admin mode\n"
-        "- clear          : clear console\n"
-        "- {command}  -s  : execute commands in server\n"
-        "online-users     : show the online users\n"
+        "- exit               : exit from admin mode\n"
+        "- clear              : clear console\n"
+        "- {command}  -s      : execute commands in server\n"
+        "- online-users       : show the online users\n"
+        "- <event>  -u        : send event to all users\n"
+        "- <event> - data  -u : send event with data to all users\n"
     )

@@ -122,6 +122,7 @@ class Core:
     # windows, linux
     def clear_console(self):
         if self.test_mode:
+            self.print('the screen cleared')
             return
 
         command = None

@@ -8,6 +8,8 @@ from utils import Messages, events_names as ev
 from functions import common_commands
 
 
+# default events ------------------------------
+
 def connect(data):
     print(Messages.connected)
 
@@ -19,6 +21,11 @@ def reconnect(data=None):
 def disconnect(data):
     print(Messages.disconnected)
 
+# custom events --------------------------------
+
+
+def hello(data=None):
+    print(Messages.hello_from_server)
 
 def auth():
     # check if user has admin privillages
@@ -107,6 +114,31 @@ def admin_input():
                 res = services.tunnel.wait_for(ev.online_users_res)
 
                 print(res)
+
+            # send <event> to all users
+            # pattern: <event> - data -u / <event> -u
+            elif inp[-2:] == '-u':
+                command = inp[:-2]
+
+                # try to parse the command
+                try:
+                    data = None
+
+                    if '-' in command:
+                        event, data = command.split('-')
+                        data = data.strip()
+                    else:
+                        event = command
+
+                    event = event.strip()
+                except:
+                    print(f"can't parse the command")
+                    continue
+
+                services.tunnel.send(ev.send_event, dict(
+                    event=event,
+                    data=data
+                ))
 
             elif inp[-2:] == '-s':
                 services.tunnel.send(ev.execute, inp[:-2])

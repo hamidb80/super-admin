@@ -27,6 +27,8 @@ class Test(E2ETestBase):
 
         self.wait(self)
 
+    # tests ---------------------------
+
     def test_get_online_clients(self):
         my_host_name = gethostname()
 
@@ -36,3 +38,14 @@ class Test(E2ETestBase):
         out = self.get_outputs().lower()
 
         assert my_host_name in out
+
+
+    def test_push_event_to_all_users(self):
+        self.push_input('hello -u')
+        self.wait()
+
+        out = self.get_outputs().lower()
+
+        assert 'server said hello' in out
+
+        # TODO: push event also with data

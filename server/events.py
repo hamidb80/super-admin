@@ -4,7 +4,8 @@ from functions import remove_from_offline_clients
 from utils import event_names as ev
 from actions import (
     connect, reconnect, disconnect,
-    execute_from_client, auth, online_users
+    execute_from_client, auth, online_users,
+    send_event
 )
 
 
@@ -26,7 +27,8 @@ event_list: List[Event] = [
     Event(ev.disconnect, disconnect),
 
     # user defined events
+    Event(ev.auth, auth),
+    Event(ev.send_event, send_event),
     Event(ev.execute, execute_from_client),
     Event(ev.online_users, online_users),
-    Event(ev.auth, auth),
 ]
