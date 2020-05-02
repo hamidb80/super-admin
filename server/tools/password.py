@@ -4,7 +4,7 @@ import os
 password = None
 
 def hash_password(passwd:str):
-    # FIXME: hashlib.md5(passwd.encode('utf-8')) not working
+    # TODO: encode the password for security
     return passwd
 
 def set_serverpass(passwd: str = None):

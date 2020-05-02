@@ -1,21 +1,17 @@
 from typing import Callable, List, Dict, Any
-import logging
 from collections import defaultdict
+import logging
 
 from flask import Flask, request, Response
 
 from .models import Client, Message
 from .views import commit_view, messages_view
-from provider import services
 from jobs import Job
 from utils import event_names as ev
 
 
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
-
-
 class Tunnel:
+    logger = logging.getLogger('tunnel')
     event_map: Dict[str, List[Callable]]
 
     def __init__(self, addr, port):
@@ -33,15 +29,14 @@ class Tunnel:
             try:
                 func(client, data)
             except Exception as e:
-                services.logger.error(f"error running event {event}")
-                services.logger.error(e)
+                self.logger.error(f"error running event {event}")
+                self.logger.error(e)
 
     def send(self, event: str, target: str, data: Any):
         new_msg = Message(target=target, event=event, data=data)
         new_msg.save()
 
     def init_routes(self):
-        # self.app.add_url_rule('/messages/',
         self.app.add_url_rule('/messages/<host_name>/',
                               methods=['GET'],
                               view_func=messages_view)
@@ -51,6 +46,10 @@ class Tunnel:
                               view_func=commit_view)
 
     def run(self):
+        # config flask logger
+        log = logging.getLogger('werkzeug')
+        log.setLevel(logging.ERROR)
+
         self.init_routes()
         self.app.run(host=self.connection[0],
                      port=self.connection[1], debug=False)

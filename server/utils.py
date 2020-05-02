@@ -8,6 +8,7 @@ class event_names:
 
     # user defined events
     auth = 'auth'
+    auth_check = 'auth_check'
 
     online_users = 'online_users'
     online_users_res = 'online_users_result'

@@ -3,9 +3,8 @@ from typing import Callable, List
 from functions import remove_from_offline_clients
 from utils import event_names as ev
 from actions import (
-    connect, reconnect, disconnect,
-    execute_from_client, auth, online_users,
-    send_event
+    connect, reconnect, disconnect, auth,
+    execute_from_client, online_users, send_event
 )
 
 

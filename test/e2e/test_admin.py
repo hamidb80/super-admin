@@ -29,6 +29,13 @@ class Test(E2ETestBase):
 
     # tests ---------------------------
 
+    def test_run_command_in_server(self):
+        # run code in the server
+        self.push_input('7 * 7 -s')
+        self.wait()
+
+        assert '49' in self.get_outputs().lower()
+
     def test_get_online_clients(self):
         my_host_name = gethostname()
 

@@ -1,7 +1,7 @@
+from logging import Logger
+
 from driver.interfaces import TunnelIC
 from driver.db import InMemoryDB
-
-from logging import Logger
 
 
 class ServicesClass:

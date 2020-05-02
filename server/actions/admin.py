@@ -2,39 +2,25 @@ from driver.models import Client, Message
 from provider import services
 
 from functions import get_online_users
-from tools.password import check_password
 from utils import event_names as ev
 
 
-def connect(client: Client, data=None):
-    services.logger.info(f'user {client.host_name} connected')
+def admin_only(action_func):
+    def wrapper(c:Client, *args, **kwargs):
+        if c.is_admin:
+            action_func(c, *args, **kwargs)
 
-    services.tunnel.send(target=client.host_name, event='hello', data='hello')
+    return wrapper
 
+# ---------------------------
 
-def reconnect(client: Client, data=None):
-    pass
-
-
-def disconnect(client: Client, data=None):
-    services.logger.info(f'{client.host_name} disconnected')
-
-
-def auth(client: Client, entered_pass: str):
-    res = check_password(entered_pass)
-
-    if res:
-        client.is_admin = True
-
-    client.send('auth_check', res)
-
-
+@admin_only
 def online_users(client: Client, data=None):
     res = get_online_users()
 
     client.send(ev.online_users_res, res)
 
-
+@admin_only
 def send_event(client: Client, data: dict):
     """
     data: {
@@ -49,8 +35,7 @@ def send_event(client: Client, data: dict):
     )
 
 # execute command from client with admin privillages
-
-
+@admin_only
 def execute_from_client(client: Client, data):
     services.logger.info(f'User {client.host_name} executed command: "{data}"')
 
