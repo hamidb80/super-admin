@@ -8,6 +8,7 @@ from provider import states, services
 from .interface import TunnelIC
 from config import UPDATE_DELAY
 
+
 class Tunnel(TunnelIC):
     event_map: Dict[str, Callable] = dict()
 
@@ -76,7 +77,11 @@ class Tunnel(TunnelIC):
             data=data
         )
 
-        return requests.post(f'{self.address}/commit/{states.host_name}', json=params)
+
+        res = requests.post(
+            f'{self.address}/commit/{states.host_name}', json=params)
+
+        return res
 
     def get_messages(self):
         """

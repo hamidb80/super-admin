@@ -1,7 +1,7 @@
 from typing import Callable, List
 from threading import Thread
 
-from actions import client_input
+from console import client_input
 
 
 class Task:

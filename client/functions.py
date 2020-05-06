@@ -26,3 +26,15 @@ def common_commands(command: str):
 
     else:
         print(Messages.command_not_defined)
+
+
+def remove_first_word(sentence: str):
+    # first space index
+    fsi = sentence.find(' ')
+    return sentence[fsi + 1:] if fsi != -1 else ''
+
+
+def first_word(sentence: str):
+    # first space index
+    fsi = sentence.find(' ')
+    return sentence[:fsi] if fsi != -1 else sentence

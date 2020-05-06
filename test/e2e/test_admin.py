@@ -13,7 +13,7 @@ class Test(E2ETestBase):
 
     @classmethod
     def destroy(self):
-        self.push_input(self, 'exit')
+        self.push_input(self, 'quit')
         self.wait(self)
 
     @classmethod
@@ -31,7 +31,7 @@ class Test(E2ETestBase):
 
     def test_run_command_in_server(self):
         # run code in the server
-        self.push_input('7 * 7 -s')
+        self.push_input('exec 7 * 7')
         self.wait()
 
         assert '49' in self.get_outputs().lower()
@@ -39,7 +39,7 @@ class Test(E2ETestBase):
     def test_get_online_clients(self):
         my_host_name = gethostname()
 
-        self.push_input('online-users')
+        self.push_input('get online-users')
         self.wait()
 
         out = self.get_outputs().lower()
@@ -48,7 +48,7 @@ class Test(E2ETestBase):
 
 
     def test_push_event_to_all_users(self):
-        self.push_input('hello -u')
+        self.push_input('send hello')
         self.wait()
 
         out = self.get_outputs().lower()
