@@ -1,8 +1,8 @@
-from base import E2ETestBase
-from time import sleep
-
 import os
+from time import sleep
 from socket import gethostname
+
+from base import E2ETestBase
 
 
 class Test(E2ETestBase):
@@ -47,7 +47,7 @@ class Test(E2ETestBase):
         assert my_host_name in out
 
 
-    def test_push_event_to_all_users(self):
+    def test_push_event_without_data(self):
         self.push_input('send hello')
         self.wait()
 
@@ -55,4 +55,4 @@ class Test(E2ETestBase):
 
         assert 'server said hello' in out
 
-        # TODO: push event also with data
+    # TODO: push event also with data

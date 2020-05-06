@@ -1,6 +1,6 @@
+import os
 from time import sleep
 from typing import Dict, Any
-import os
 from threading import Thread
 
 from redis import Redis

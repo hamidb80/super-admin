@@ -17,4 +17,3 @@ def disconnect(data):
 # custom events --------------------------------
 def hello(data=None):
     print(Messages.hello_from_server)
-

@@ -1,5 +1,5 @@
-from time import sleep
 import os
+from time import sleep
 
 from base import E2ETestBase
 
