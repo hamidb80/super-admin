@@ -46,7 +46,6 @@ class Test(E2ETestBase):
 
         assert my_host_name in out
 
-
     def test_push_event_without_data(self):
         self.push_input('send hello')
         self.wait()
@@ -56,4 +55,20 @@ class Test(E2ETestBase):
         assert 'server said hello' in out
 
     # TODO: push event also with data
-    # TODO: add test for aliases
+
+    def test_alias_set(self):
+        my_alias_name = 'send_hello_to_all'
+
+        self.push_input(f'alias {my_alias_name} = send hello')
+        self.push_input('alias-list')
+        self.wait()
+
+        out = self.get_outputs().lower()
+        assert my_alias_name in out
+
+        self.push_input(f'call-alias {my_alias_name}')
+        self.wait()
+
+        out = self.get_outputs().lower()
+
+        assert 'server said hello' in out
