@@ -63,10 +63,14 @@ class Messages:
 
     admin_help = (
         "command list:\n"
-        "- quit/Q                    : exit from admin mode\n"
-        "- clear/C                   : clear console\n"
-        "- exec/E {command}          : execute commands in server\n"
-        "- get/G <stuff>             : show the online users\n"
-        "- send/S <event>  -u        : send event to all users\n"
-        "- send/S <event> - data  -u : send event with data to all users\n"
+        "- quit/Q                      : exit from admin mode\n"
+        "- clear/C                     : clear console\n"
+        "- exec/E {command}            : execute commands in server\n"
+        "- get/G <stuff>               : get stuff\n"
+        "--- stuff: [ online-users, ]\n"
+        "- send/S <event>  -u          : send event to all users\n"
+        "- send/S <event> - data  -u   : send event with data to all users\n"
+        "- alias/A <alias> = <command> : define an alias\n"
+        "- alias-list/AL               : show the list of aliases\n"
+        "- call-alias/CA               : call an alias\n"
     )

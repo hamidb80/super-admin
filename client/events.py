@@ -1,7 +1,7 @@
 from typing import List
 
 from driver.event import Event
-from utils import events_names as ev
+from utils.statics import events_names as ev
 
 from actions import (
     connect, disconnect, reconnect,

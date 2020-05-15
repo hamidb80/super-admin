@@ -11,7 +11,7 @@ from driver.core import Core
 from driver.argumentparser import get_args
 from driver.tunnel import Tunnel
 
-from functions import get_host_name
+from utils.functions import get_host_name
 
 if __name__ == "__main__":
     args = get_args()

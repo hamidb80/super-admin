@@ -56,3 +56,4 @@ class Test(E2ETestBase):
         assert 'server said hello' in out
 
     # TODO: push event also with data
+    # TODO: add test for aliases

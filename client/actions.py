@@ -1,4 +1,4 @@
-from utils import Messages
+from utils.statics import Messages
 from monkey_patch import print
 
 # default events ------------------------------
